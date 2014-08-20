@@ -108,7 +108,7 @@ namespace UnityTest.IntegrationTests
             };
 
             if (m_SelectedInterface > 0)
-                config.ipList = new List<string> {m_Interfaces.ElementAt(m_SelectedInterface)}
+                config.ipList = new List<string> {m_Interfaces.ElementAt(m_SelectedInterface)};
 
             PlatformRunner.BuildAndRunInPlayer(config);
             Close();
