@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NUnit.Core;
-using UnityEngine;
 using Object = System.Object;
 
 namespace UnityTest
