@@ -75,7 +75,7 @@ namespace UnityTest
 
         private static string GetTextFromTempFile(string fileName)
         {
-            string text;
+            string text = null;
             try
             {
 #if UNITY_EDITOR
