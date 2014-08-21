@@ -55,8 +55,7 @@ public class TestResultRenderer
         }
         else
         {
-            int count = 0;
-            foreach (var testGroup in m_TestCollection) count += testGroup.Value.Count;
+            int count = m_TestCollection.Sum (testGroup => testGroup.Value.Count);
             GUILayout.Label(count + " tests failed!", Styles.FailedLabelStyle);
 
             m_ScrollPosition = GUILayout.BeginScrollView(m_ScrollPosition, GUILayout.ExpandWidth(true));
