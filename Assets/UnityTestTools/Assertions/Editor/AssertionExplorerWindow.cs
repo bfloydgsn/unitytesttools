@@ -147,7 +147,7 @@ namespace UnityTest
             EditorGUILayout.LabelField("Filter by", GUILayout.MaxWidth(50));
             m_FilterType = (FilterType)EditorGUILayout.EnumPopup(m_FilterType, GUILayout.MaxWidth(100));
             m_FilterText = EditorGUILayout.TextField(m_FilterText, GUILayout.MaxWidth(100));
-            if (GUILayout.Button("clear", GUILayout.ExpandWidth(false)))
+            if (GUILayout.Button("Clear", GUILayout.ExpandWidth(false)))
                 m_FilterText = "";
             EditorGUILayout.EndHorizontal();
         }

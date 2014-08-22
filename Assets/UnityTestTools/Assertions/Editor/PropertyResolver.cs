@@ -26,7 +26,7 @@ namespace UnityTest
             propertPath = propertPath.Trim();
             if (!PropertyPathIsValid(propertPath))
             {
-                throw new ArgumentException("Incorrent property path: " + propertPath);
+                throw new ArgumentException("Incorrect property path: " + propertPath);
             }
 
             var idx = propertPath.LastIndexOf('.');
@@ -90,7 +90,7 @@ namespace UnityTest
 
         public IList<string> GetFieldsAndPropertiesFromGameObject(GameObject gameObject, int depthOfSearch, string extendPath)
         {
-            if (depthOfSearch < 1) throw new ArgumentOutOfRangeException("depthOfSearch need to be greater than 0");
+            if (depthOfSearch < 1) throw new ArgumentOutOfRangeException("depthOfSearch has to be greater than 0");
 
             var goVals = GetPropertiesAndFieldsFromType(typeof(GameObject),
                                                         depthOfSearch - 1).Select(s => "gameObject." + s);

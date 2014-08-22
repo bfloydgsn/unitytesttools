@@ -20,7 +20,7 @@ namespace UnityTest
         {
             m_Name = name;
             m_ThisDropDown.convertForGUIContent = m_ReplaceDotWithSlashAndAddGoGroup;
-            m_ThisDropDown.tooltip = "Select path the value you want to be used for comparisment.";
+            m_ThisDropDown.tooltip = "Select the path to the value you want to use for comparison.";
         }
 
         public void Draw(GameObject go, ActionBase comparer, string propertPath, Type[] accepatbleTypes, Action<GameObject> onSelectedGo, Action<string> onSelectedPath)
@@ -70,7 +70,7 @@ namespace UnityTest
                                       }
                                       catch (Exception)
                                       {
-                                          Debug.LogWarning("An exception was thrown while resolving property list. Reseting property path.");
+                                          Debug.LogWarning("An exception was thrown while resolving a property list. Resetting property path.");
                                           result = "";
                                           return new string[0];
                                       }
@@ -147,7 +147,7 @@ namespace UnityTest
                 GUI.FocusControl(btnName);
             }
 
-            if (GUILayout.Button("clear", EditorStyles.miniButton, GUILayout.Width(38)))
+            if (GUILayout.Button("Clear", EditorStyles.miniButton, GUILayout.Width(38)))
             {
                 result = "";
                 GUI.FocusControl(null);
