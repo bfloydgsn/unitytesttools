@@ -52,7 +52,7 @@ namespace UnityTest
                 {"invalid", summaryResults.NotRunnable.ToString()},
                 {"date", now.ToString("yyyy-MM-dd")},
                 {"time", now.ToString("HH:mm:ss")}
-            }
+            };
 
             WriteOpeningElement("test-results", attributes);
 
@@ -187,7 +187,7 @@ namespace UnityTest
                 {"machine-name", GetEnvironmentMachineName()},
                 {"user", GetEnvironmentUserName()},
                 {"user-domain", GetEnvironmentUserDomainName()}
-            }
+            };
             WriteOpeningElement("environment", attributes, true);
         }
 
@@ -197,7 +197,7 @@ namespace UnityTest
             {
                 {"current-culture", CultureInfo.CurrentCulture.ToString()},
                 {"current-uiculture", CultureInfo.CurrentUICulture.ToString()}
-            }
+            };
             WriteOpeningElement("culture-info", attributes, true);
         }
 
@@ -211,7 +211,7 @@ namespace UnityTest
                 {"result", summaryResults.Success ? "Success" : "Failure"},
                 {"success", summaryResults.Success ? "True" : "False"},
                 {"time", summaryResults.Duration.ToString("#####0.000", NumberFormatInfo.InvariantInfo)}
-            }
+            };
             WriteOpeningElement("test-suite", attributes);
         }
 
@@ -237,7 +237,7 @@ namespace UnityTest
                     if (result.Message != null)
                         WriteReasonElement(result);
                     break;
-            }
+            };
 
             WriteClosingElement("test-case");
         }
@@ -257,7 +257,7 @@ namespace UnityTest
             {
                 {"name", result.FullName},
                 {"executed", result.Executed.ToString()}
-            }
+            };
             string resultString;
             switch (result.ResultState)
             {

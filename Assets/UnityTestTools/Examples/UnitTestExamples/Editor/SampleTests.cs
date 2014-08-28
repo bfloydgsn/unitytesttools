@@ -9,7 +9,7 @@ namespace UnityTest
     internal class SampleTests
     {
         [Test]
-        [Category("Faling Tests")]
+        [Category("Failing Tests")]
         public void ExceptionTest()
         {
             throw new Exception("Exception throwing test");
@@ -24,21 +24,21 @@ namespace UnityTest
 
         [Test]
         [MaxTime(100)]
-        [Category("Faling Tests")]
+        [Category("Failing Tests")]
         public void SlowTest()
         {
             Thread.Sleep(200);
         }
 
         [Test]
-        [Category("Faling Tests")]
+        [Category("Failing Tests")]
         public void FailingTest()
         {
             Assert.Fail();
         }
 
         [Test]
-        [Category("Faling Tests")]
+        [Category("Failing Tests")]
         public void InconclusiveTest()
         {
             Assert.Inconclusive();
