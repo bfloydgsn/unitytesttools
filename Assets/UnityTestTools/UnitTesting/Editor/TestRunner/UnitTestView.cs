@@ -14,8 +14,8 @@ namespace UnityTest
 
         [SerializeField] private List<UnitTestResult> m_ResultList = new List<UnitTestResult>();
         [SerializeField] private string[] m_AvailableCategories;
-        [SerializeField] private readonly List<string> m_FoldMarkers = new List<string>();
-        [SerializeField] private readonly List<UnitTestRendererLine> m_SelectedLines = new List<UnitTestRendererLine>();
+        [SerializeField] private List<string> m_FoldMarkers = new List<string>();
+        [SerializeField] private List<UnitTestRendererLine> m_SelectedLines = new List<UnitTestRendererLine>();
         UnitTestRendererLine m_TestLines;
 
         #region runner steering vars

@@ -40,7 +40,7 @@ namespace UnityTest
 
         [SerializeField] private GameObject m_SelectedLine;
         [SerializeField] private List<TestResult> m_ResultList = new List<TestResult>();
-        [SerializeField] private readonly List<GameObject> m_FoldMarkers = new List<GameObject>();
+        [SerializeField] private List<GameObject> m_FoldMarkers = new List<GameObject>();
 
         private IntegrationTestsRunnerSettings m_Settings;
 

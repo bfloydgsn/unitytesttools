@@ -19,7 +19,7 @@ namespace UnityTest
         [SerializeField]
         private FilterType m_FilterType;
         [SerializeField]
-        private readonly List<string> m_FoldMarkers = new List<string>();
+        private List<string> m_FoldMarkers = new List<string>();
         [SerializeField]
         private GroupByType m_GroupBy;
         [SerializeField]
