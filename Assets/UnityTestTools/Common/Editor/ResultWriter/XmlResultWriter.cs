@@ -114,65 +114,37 @@ namespace UnityTest
 
         static string GetEnvironmentUserName()
         {
-            #if !UNITY_WP8 && !UNITY_METRO
             return Environment.UserName;
-            #else
-            return "";
-            #endif
         }
 
         static string GetEnvironmentMachineName()
         {
-            #if !UNITY_WP8 && !UNITY_METRO
             return Environment.MachineName;
-            #else
-            return "";
-            #endif
         }
 
         static string GetEnvironmentUserDomainName()
         {
-            #if !UNITY_WP8 && !UNITY_METRO
             return Environment.UserDomainName;
-            #else
-            return "";
-            #endif
         }
 
         static string GetEnvironmentVersion()
         {
-            #if !UNITY_METRO
             return Environment.Version.ToString();
-            #else
-            return "";
-            #endif
         }
 
         static string GetEnvironmentOSVersion()
         {
-            #if !UNITY_METRO
             return Environment.OSVersion.ToString();
-            #else
-            return "";
-            #endif
         }
 
         static string GetEnvironmentOSVersionPlatform()
         {
-            #if !UNITY_METRO
             return Environment.OSVersion.Platform.ToString();
-            #else
-            return "";
-            #endif
         }
 
         static string EnvironmentGetCurrentDirectory()
         {
-            #if !UNITY_METRO
             return Environment.CurrentDirectory;
-            #else
-            return "";
-            #endif
         }
 
         private void WriteEnvironment()
@@ -309,18 +281,13 @@ namespace UnityTest
             m_ResultWriter.AppendLine();
         }
 
-#if !UNITY_METRO
         public void WriteToFile(string resultDestiantion, string resultFileName)
         {
             try
             {
                 var path = Path.Combine(resultDestiantion, resultFileName);
                 Debug.Log("Saving results in " + path);
-                using (var fs = File.OpenWrite(path))
-                    using (var sw = new StreamWriter(fs, Encoding.UTF8))
-                    {
-                        sw.Write(GetTestResult());
-                    }
+                File.WriteAllText(path, GetTestResult(), Encoding.UTF8);
             }
             catch (Exception e)
             {
@@ -328,6 +295,5 @@ namespace UnityTest
                 Debug.LogException(e);
             }
         }
-#endif  // if !UNITY_METRO
     }
 }
