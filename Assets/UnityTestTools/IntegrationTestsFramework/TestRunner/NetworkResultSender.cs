@@ -1,8 +1,12 @@
+#if !UNITY_METRO && (UNITY_PRO_LICENSE || !(UNITY_ANDROID || UNITY_IPHONE))
+#define UTT_SOCKETS_SUPPORTED
+#endif
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityTest.IntegrationTestRunner;
-#if !UNITY_METRO
+
+#if UTT_SOCKETS_SUPPORTED
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
 #endif
@@ -11,22 +15,26 @@ namespace UnityTest
 {
     public class NetworkResultSender : ITestRunnerCallback
     {
+#if UTT_SOCKETS_SUPPORTED
         private readonly TimeSpan m_ConnectionTimeout = TimeSpan.FromSeconds(5);
 
         private readonly string m_Ip;
         private readonly int m_Port;
+#endif
         private bool m_LostConnection;
 
         public NetworkResultSender(string ip, int port)
         {
+#if UTT_SOCKETS_SUPPORTED
             m_Ip = ip;
             m_Port = port;
+#endif
         }
 
         private bool SendDTO(ResultDTO dto)
         {
             if (m_LostConnection) return false;
-#if !UNITY_METRO
+#if UTT_SOCKETS_SUPPORTED 
             try
             {
                 using (var tcpClient = new TcpClient())
@@ -60,7 +68,7 @@ namespace UnityTest
                 m_LostConnection = true;
                 return false;
             }
-#endif  // if !UNITY_METRO
+#endif  // if UTT_SOCKETS_SUPPORTED
             return true;
         }
 

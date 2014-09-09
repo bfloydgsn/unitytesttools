@@ -27,7 +27,7 @@ namespace UnityTest
 
         private int m_CheckOnFrame;
 
-        private string m_CreatedInFilePath;
+        private string m_CreatedInFilePath = "";
         private int m_CreatedInFileLine = -1;
 
         public ActionBase Action

@@ -1,3 +1,6 @@
+#if !UNITY_METRO && !UNITY_WEBPLAYER && (UNITY_PRO_LICENSE || !(UNITY_ANDROID || UNITY_IPHONE))
+#define UTT_SOCKETS_SUPPORTED
+#endif
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,17 +9,14 @@ using System.Threading;
 using UnityEngine;
 using UnityTest.IntegrationTestRunner;
 
-#if !UNITY_METRO
+#if UTT_SOCKETS_SUPPORTED
 using System.Net;
 using System.Net.Sockets;
+using System.Net.NetworkInformation;
 #endif
 
 #if UNITY_EDITOR
 using UnityEditorInternal;
-#endif
-
-#if !UNITY_WEBPLAYER
-using System.Net.NetworkInformation;
 #endif
 
 namespace UnityTest
@@ -30,7 +30,7 @@ namespace UnityTest
 
         public bool sendResultsOverNetwork { get; private set; }
 
-#if !UNITY_METRO
+#if UTT_SOCKETS_SUPPORTED
         private readonly List<IPEndPoint> m_IPEndPointList = new List<IPEndPoint>();
 #endif
 
@@ -42,7 +42,7 @@ namespace UnityTest
 
         private void CheckForSendingResultsOverNetwork()
         {
-#if !UNITY_METRO
+#if UTT_SOCKETS_SUPPORTED
             string text;
             if (Application.isEditor)
                 text = GetTextFromTempFile(integrationTestsNetwork);
@@ -63,7 +63,7 @@ namespace UnityTest
                 var port = line.Substring(idx + 1);
                 m_IPEndPointList.Add(new IPEndPoint(IPAddress.Parse(ip), Int32.Parse(port)));
             }
-#endif  // if !UNITY_METRO
+#endif  // if UTT_SOCKETS_SUPPORTED
         }
 
         private static string GetTextFromTextAsset(string fileName)
@@ -78,7 +78,7 @@ namespace UnityTest
             string text = null;
             try
             {
-#if UNITY_EDITOR
+#if UNITY_EDITOR && !UNITY_WEBPLAYER
                 text = File.ReadAllText(Path.Combine("Temp", fileName));
 #endif
             }
@@ -103,7 +103,7 @@ namespace UnityTest
 
         public static List<string> GetAvailableNetworkIPs()
         {
-#if !UNITY_METRO && !UNITY_WEBPLAYER
+#if UTT_SOCKETS_SUPPORTED
             if (!NetworkInterface.GetIsNetworkAvailable()) return null;
 
             var ipList = new List<UnicastIPAddressInformation>();
@@ -127,14 +127,14 @@ namespace UnityTest
                             return mask2.CompareTo(mask1);
                         });
             return ipList.Select(i => i.Address.ToString()).ToList();
-#else   // if !UNITY_METRO && !UNITY_WEBPLAYER
+#else
             return new List<string>();
-#endif  // if !UNITY_METRO && !UNITY_WEBPLAYER
+#endif  // if UTT_SOCKETS_SUPPORTED
         }
 
         public ITestRunnerCallback ResolveNetworkConnection()
         {
-#if !UNITY_METRO
+#if UTT_SOCKETS_SUPPORTED
             var nrsList = m_IPEndPointList.Select(ipEndPoint => new NetworkResultSender(ipEndPoint.Address.ToString(), ipEndPoint.Port)).ToList();
 
             var timeout = TimeSpan.FromSeconds(30);
@@ -159,7 +159,7 @@ namespace UnityTest
             }
             Debug.LogError("Couldn't connect to the server: " + string.Join(", ", m_IPEndPointList.Select(ipep => ipep.Address + ":" + ipep.Port).ToArray()));
             sendResultsOverNetwork = false;
-#endif  // if !UNITY_METRO
+#endif  // if UTT_SOCKETS_SUPPORTED
             return null;
         }
     }
