@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using UnityEngine;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
 public class IntegrationTestAttribute : Attribute

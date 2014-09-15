@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
 namespace UnityTest
 {
     public class UnitTestsRunnerSettings : ProjectSettingsBase
