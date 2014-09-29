@@ -8,7 +8,6 @@ using System.Linq;
 using System.Threading;
 using UnityEngine;
 using UnityTest.IntegrationTestRunner;
-
 #if UTT_SOCKETS_SUPPORTED
 using System.Net;
 using System.Net.Sockets;
@@ -104,7 +103,8 @@ namespace UnityTest
         public static List<string> GetAvailableNetworkIPs()
         {
 #if UTT_SOCKETS_SUPPORTED
-            if (!NetworkInterface.GetIsNetworkAvailable()) return null;
+            if (!NetworkInterface.GetIsNetworkAvailable()) 
+                return new List<String>{IPAddress.Loopback.ToString()};
 
             var ipList = new List<UnicastIPAddressInformation>();
 
@@ -126,6 +126,8 @@ namespace UnityTest
                             var mask2 = BitConverter.ToInt32(ip2.IPv4Mask.GetAddressBytes().Reverse().ToArray(), 0);
                             return mask2.CompareTo(mask1);
                         });
+            if (ipList.Count == 0)
+                return new List<String> { IPAddress.Loopback.ToString() };
             return ipList.Select(i => i.Address.ToString()).ToList();
 #else
             return new List<string>();
