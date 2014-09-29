@@ -12,6 +12,7 @@ public class PlatformRunnerConfiguration
 {
     public string[] scenes = new string[0];
     public BuildTarget buildTarget;
+    public bool runInEditor;
     public string projectName = EditorApplication.currentScene;
 
     public string resultsDir = null;

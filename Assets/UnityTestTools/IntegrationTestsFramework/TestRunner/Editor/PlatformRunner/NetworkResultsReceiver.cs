@@ -84,7 +84,8 @@ namespace UnityTest
                     WriteResultsToLog(dto, m_TestResults);
                     if (!string.IsNullOrEmpty(m_Configuration.resultsDir))
                     {
-                        var resultWriter = new XmlResultWriter(dto.loadedLevelName, m_TestResults.ToArray());
+                        var platform = m_Configuration.runInEditor ? "Editor" : m_Configuration.buildTarget.ToString();
+                        var resultWriter = new XmlResultWriter(dto.loadedLevelName, platform, m_TestResults.ToArray());
                         try
                         {
                             var filePath = Path.Combine(m_Configuration.resultsDir, dto.loadedLevelName + ".xml");

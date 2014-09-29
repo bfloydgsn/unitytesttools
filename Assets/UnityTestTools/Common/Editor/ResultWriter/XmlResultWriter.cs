@@ -14,11 +14,13 @@ namespace UnityTest
         private int m_Indend;
         private readonly string m_SuiteName;
         private readonly ITestResult[] m_Results;
+        string m_Platform;
 
-        public XmlResultWriter(string suiteName, ITestResult[] results)
+        public XmlResultWriter(string suiteName, string platform, ITestResult[] results)
         {
             m_SuiteName = suiteName;
             m_Results = results;
+            m_Platform = platform;
         }
 
         private const string k_NUnitVersion = "2.6.2-Unity";
@@ -56,7 +58,7 @@ namespace UnityTest
 
             WriteOpeningElement("test-results", attributes);
 
-            WriteEnvironment();
+            WriteEnvironment(m_Platform);
             WriteCultureInfo();
             WriteTestSuite(resultsName, summaryResults);
             WriteOpeningElement("results");
@@ -147,7 +149,7 @@ namespace UnityTest
             return Environment.CurrentDirectory;
         }
 
-        private void WriteEnvironment()
+        private void WriteEnvironment( string targetPlatform )
         {
             var attributes = new Dictionary<string, string>
             {
@@ -158,7 +160,9 @@ namespace UnityTest
                 {"cwd", EnvironmentGetCurrentDirectory()},
                 {"machine-name", GetEnvironmentMachineName()},
                 {"user", GetEnvironmentUserName()},
-                {"user-domain", GetEnvironmentUserDomainName()}
+                {"user-domain", GetEnvironmentUserDomainName()},
+                {"unity-version", Application.unityVersion},
+                {"unity-platform", targetPlatform}
             };
             WriteOpeningElement("environment", attributes, true);
         }

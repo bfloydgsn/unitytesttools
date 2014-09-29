@@ -87,6 +87,7 @@ namespace UnityTest
                 resultsDir = GetParameterArgument(k_ResultFileDirParam),
                 ipList = TestRunnerConfigurator.GetAvailableNetworkIPs(),
                 port = PlatformRunnerConfiguration.TryToGetFreePort(),
+                runInEditor = true,
             };
 
             var settings = new PlayerSettingConfigurator(true);

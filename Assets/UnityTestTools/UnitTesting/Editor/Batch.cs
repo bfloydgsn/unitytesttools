@@ -91,7 +91,7 @@ namespace UnityTest
                 else
                     fileName = "UnitTestResults.xml";
 #if !UNITY_METRO
-                var resultWriter = new XmlResultWriter("Unit Tests", m_Results.ToArray());
+                var resultWriter = new XmlResultWriter("Unit Tests", "Editor", m_Results.ToArray());
                 resultWriter.WriteToFile(resultDestiantion, fileName);
 #endif
                 var executed = m_Results.Where(result => result.Executed);
