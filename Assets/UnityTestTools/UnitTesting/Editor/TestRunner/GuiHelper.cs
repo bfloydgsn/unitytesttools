@@ -36,23 +36,6 @@ namespace UnityTest
             }
         }
 
-        public static Texture GetIconForResult(TestResult.ResultType resultState)
-        {
-            switch (resultState)
-            {
-                case TestResult.ResultType.Success:
-                    return Icons.SuccessImg;
-                case TestResult.ResultType.Timeout:
-                case TestResult.ResultType.Failed:
-                case TestResult.ResultType.FailedException:
-                    return Icons.FailImg;
-                case TestResult.ResultType.Ignored:
-                    return Icons.IgnoreImg;
-                default:
-                    return Icons.UnknownImg;
-            }
-        }
-
         private static int ExtractSourceFileLine(string stackTrace)
         {
             int line = 0;

@@ -14,7 +14,7 @@ namespace UnityTest
                                                    var temp = c.transform;
                                                    while (temp != null)
                                                    {
-                                                       if (temp.GetComponent(typeof(TestComponent)) != null) return c.gameObject;
+                                                       if (temp.GetComponent("TestComponent") != null) return c.gameObject;
                                                        temp = temp.parent.transform;
                                                    }
                                                    return null;

@@ -180,7 +180,7 @@ namespace UnityTest
                     var result = s_Instance.m_ResultList.Find(r => r.GameObject == go);
                     if (result != null)
                     {
-                        var icon = result.Executed ? GuiHelper.GetIconForResult(result.resultType) : Icons.UnknownImg;
+                        var icon = result.Executed ? IntegrationTestRendererBase.GetIconForResult(result.resultType) : Icons.UnknownImg;
                         EditorGUI.LabelField(new Rect(rect.xMax - 18, rect.yMin - 2, rect.width, rect.height), new GUIContent(icon));
                     }
                     EditorGUIUtility.SetIconSize(Vector2.zero);

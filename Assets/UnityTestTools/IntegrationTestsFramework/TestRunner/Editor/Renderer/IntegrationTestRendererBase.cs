@@ -62,7 +62,7 @@ namespace UnityTest
             var isSelected = Selection.gameObjects.Contains(m_GameObject);
 
             var value = GetResult();
-            var icon = GuiHelper.GetIconForResult(value);
+            var icon = GetIconForResult(value);
 
             var label = new GUIContent(m_Name, icon);
             var labelRect = GUILayoutUtility.GetRect(label, EditorStyles.label, GUILayout.ExpandWidth(true), GUILayout.Height(18));
@@ -133,6 +133,23 @@ namespace UnityTest
 #else
                 Undo.DestroyObjectImmediate(t);
 #endif
+            }
+        }
+
+        public static Texture GetIconForResult(TestResult.ResultType resultState)
+        {
+            switch (resultState)
+            {
+                case TestResult.ResultType.Success:
+                    return Icons.SuccessImg;
+                case TestResult.ResultType.Timeout:
+                case TestResult.ResultType.Failed:
+                case TestResult.ResultType.FailedException:
+                    return Icons.FailImg;
+                case TestResult.ResultType.Ignored:
+                    return Icons.IgnoreImg;
+                default:
+                    return Icons.UnknownImg;
             }
         }
 
