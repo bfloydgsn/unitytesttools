@@ -73,7 +73,7 @@ namespace UnityTest
                 case ResultDTO.MessageType.TestFinished:
                     m_TestResults.Add(dto.testResult);
                     m_TestTimeout = TimeSpan.Zero;
-                    if (dto.testResult.Executed && !dto.testResult.IsSuccess)
+                    if (dto.testResult.Executed && dto.testResult.ResultState != TestResultState.Ignored && !dto.testResult.IsSuccess)
                         m_TestFailed = true;
                     break;
                 case ResultDTO.MessageType.RunStarted:
