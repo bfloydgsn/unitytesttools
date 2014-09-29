@@ -69,6 +69,8 @@ namespace UnityTest
 
         private static void RunInEditor(List<string> sceneList)
         {
+            CheckActiveBuildTarget();
+
             NetworkResultsReceiver.StopReceiver();
             if (sceneList == null || sceneList.Count == 0)
             {
@@ -93,6 +95,19 @@ namespace UnityTest
             NetworkResultsReceiver.StartReceiver(config);
 
             EditorApplication.isPlaying = true;
+        }
+
+        static void CheckActiveBuildTarget()
+        {
+            if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.MetroPlayer
+                || EditorUserBuildSettings.activeBuildTarget == BuildTarget.WebPlayer
+                || EditorUserBuildSettings.activeBuildTarget == BuildTarget.WebPlayerStreamed)
+            {
+                Debug.Log("Changing activeBuildTarget because "
+                    + EditorUserBuildSettings.activeBuildTarget +
+                    " is not supported");
+                EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.StandaloneLinux);
+            }
         }
 
         private static BuildTarget ? GetTargetPlatform()
