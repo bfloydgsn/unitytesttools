@@ -170,38 +170,41 @@ namespace UnityTest
                 if (currentTest != null && msg.EndsWith("(" + currentTest.name + ')')) msg = msg.Substring(0, msg.LastIndexOf('('));
                 m_TestMessages += msg + "\n";
             }
-            if (type == LogType.Exception)
+            switch (type)
             {
-                var exceptionType = condition.Substring(0, condition.IndexOf(':'));
-                if (currentTest != null && currentTest.IsExceptionExpected(exceptionType))
+                case LogType.Exception:
                 {
-                    m_TestMessages += exceptionType + " was expected\n";
-                    if (currentTest.ShouldSucceedOnException())
+                    var exceptionType = condition.Substring(0, condition.IndexOf(':'));
+                    if (currentTest != null && currentTest.IsExceptionExpected(exceptionType))
+                    {
+                        m_TestMessages += exceptionType + " was expected\n";
+                        if (currentTest.ShouldSucceedOnException())
+                        {
+                            m_TestState = TestState.Success;
+                        }
+                    }
+                    else
+                    {
+                        m_TestState = TestState.Exception;
+                        m_Stacktrace = stacktrace;
+                    }
+                }
+                    break;
+                case LogType.Assert:
+                case LogType.Error:
+                    m_TestState = TestState.Failure;
+                    m_Stacktrace = stacktrace;
+                    break;
+                case LogType.Log:
+                    if (m_TestState ==  TestState.Running && condition.StartsWith(IntegrationTest.passMessage))
                     {
                         m_TestState = TestState.Success;
                     }
-                }
-                else
-                {
-                    m_TestState = TestState.Exception;
-                    m_Stacktrace = stacktrace;
-                }
-            }
-            else if (type == LogType.Error || type == LogType.Assert)
-            {
-                m_TestState = TestState.Failure;
-                m_Stacktrace = stacktrace;
-            }
-            else if (type == LogType.Log)
-            {
-                if (m_TestState ==  TestState.Running && condition.StartsWith(IntegrationTest.passMessage))
-                {
-                    m_TestState = TestState.Success;
-                }
-                if (condition.StartsWith(IntegrationTest.failMessage))
-                {
-                    m_TestState = TestState.Failure;
-                }
+                    if (condition.StartsWith(IntegrationTest.failMessage))
+                    {
+                        m_TestState = TestState.Failure;
+                    }
+                    break;
             }
         }
 

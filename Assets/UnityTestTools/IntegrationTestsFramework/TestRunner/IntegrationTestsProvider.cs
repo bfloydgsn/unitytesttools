@@ -61,23 +61,22 @@ namespace UnityTest.IntegrationTestRunner
 
         private ITestComponent FindNextTestGroup(ITestComponent testGroup)
         {
-            if (testGroup != null)
+            if (testGroup == null) 
+                throw new Exception ("No test left");
+
+            if (testCollection[testGroup].Any())
             {
-                if (testCollection[testGroup].Any())
-                {
-                    testGroup.EnableTest(true);
-                    return FindInnerTestGroup(testGroup);
-                }
-                testCollection.Remove(testGroup);
-                testGroup.EnableTest(false);
-
-                var parentTestGroup = testGroup.GetTestGroup();
-                if (parentTestGroup == null) return null;
-
-                testCollection[parentTestGroup].Remove(testGroup);
-                return FindNextTestGroup(parentTestGroup);
+                testGroup.EnableTest(true);
+                return FindInnerTestGroup(testGroup);
             }
-            throw new Exception("No test left");
+            testCollection.Remove(testGroup);
+            testGroup.EnableTest(false);
+
+            var parentTestGroup = testGroup.GetTestGroup();
+            if (parentTestGroup == null) return null;
+
+            testCollection[parentTestGroup].Remove(testGroup);
+            return FindNextTestGroup(parentTestGroup);
         }
 
         private ITestComponent FindInnerTestGroup(ITestComponent group)

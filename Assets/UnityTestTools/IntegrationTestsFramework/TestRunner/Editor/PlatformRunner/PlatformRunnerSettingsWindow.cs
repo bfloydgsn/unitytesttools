@@ -120,7 +120,7 @@ namespace UnityTest.IntegrationTests
 
             EditorGUILayout.BeginHorizontal();
             m_Settings.resultsPath = EditorGUILayout.TextField(m_Label, m_Settings.resultsPath);
-            if (GUILayout.Button("search", EditorStyles.miniButton, GUILayout.Width(50)))
+            if (GUILayout.Button("Search", EditorStyles.miniButton, GUILayout.Width(50)))
             {
                 var selectedPath = EditorUtility.SaveFolderPanel("Result files destination", m_Settings.resultsPath, "");
                 if (!string.IsNullOrEmpty(selectedPath))

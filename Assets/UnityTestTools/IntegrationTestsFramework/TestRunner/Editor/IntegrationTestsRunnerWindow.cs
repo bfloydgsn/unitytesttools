@@ -152,7 +152,7 @@ namespace UnityTest
                 if (test.gameObject.transform.parent != null && test.gameObject.transform.parent.gameObject.GetComponent<TestComponent>() == null)
                 {
                     test.gameObject.transform.parent = null;
-                    Debug.LogWarning("Tests need to be on top of hierarchy or directly under another test.");
+                    Debug.LogWarning("Tests need to be on top of the hierarchy or directly under another test.");
                 }
             }
             if (selectedInHierarchy) selectedInHierarchy = false;
