@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace UnityTest
 {
     public interface ITestComponent : IComparable<ITestComponent>
@@ -260,7 +264,12 @@ namespace UnityTest
 
         public static List<TestComponent> FindAllTestsOnScene()
         {
-            return Resources.FindObjectsOfTypeAll(typeof(TestComponent)).Cast<TestComponent>().ToList();
+			var tests = Resources.FindObjectsOfTypeAll (typeof(TestComponent)).Cast<TestComponent> ();
+#if UNITY_EDITOR
+			tests = tests.Where( t => {var p = PrefabUtility.GetPrefabType(t); return p != PrefabType.Prefab && p != PrefabType.ModelPrefab;} );
+
+#endif
+			return tests.ToList ();
         }
 
         public static List<TestComponent> FindAllTopTestsOnScene()
