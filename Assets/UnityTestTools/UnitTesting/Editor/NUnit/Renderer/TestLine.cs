@@ -22,14 +22,13 @@ namespace UnityTest
             m_ResultId = resultId;
             var c = new List<string>();
             foreach (string category in test.Categories)
-            {
                 c.Add(category);
-            }
             foreach (string category in test.Parent.Categories)
-            {
                 c.Add(category);
-            }
-            m_Categories = c;
+            if (test.Parent is ParameterizedMethodSuite) 
+                foreach (string category in test.Parent.Parent.Categories)
+                    c.Add(category);
+            m_Categories = c; 
         }
 
         public UnitTestResult result
