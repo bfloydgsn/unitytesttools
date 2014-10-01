@@ -103,7 +103,7 @@ namespace UnityTest
             EditorGUILayout.LabelField("Filter:", GUILayout.Width(35));
             m_Settings.testFilter = EditorGUILayout.TextField(m_Settings.testFilter, EditorStyles.textField);
 
-            if (m_AvailableCategories != null && m_AvailableCategories.Length > 1)
+            if (m_AvailableCategories != null && m_AvailableCategories.Length > 0)
                 m_Settings.categoriesMask = EditorGUILayout.MaskField(m_Settings.categoriesMask, m_AvailableCategories, GUILayout.MaxWidth(90));
 
             if (GUILayout.Button(m_Settings.filtersFoldout ? "Hide" : "Advanced", GUILayout.Width(80), GUILayout.Height(15)))
