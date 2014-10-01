@@ -100,14 +100,12 @@ namespace UnityTest
 
         static void CheckActiveBuildTarget()
         {
-            if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.MetroPlayer
-                || EditorUserBuildSettings.activeBuildTarget == BuildTarget.WebPlayer
-                || EditorUserBuildSettings.activeBuildTarget == BuildTarget.WebPlayerStreamed)
+            var notSupportedPlatforms = new[] { "MetroPlayer", "WebPlayer", "WebPlayerStreamed" };
+            if (notSupportedPlatforms.Contains(EditorUserBuildSettings.activeBuildTarget.ToString()))
             {
-                Debug.Log("Changing activeBuildTarget because "
-                    + EditorUserBuildSettings.activeBuildTarget +
-                    " is not supported");
-                EditorUserBuildSettings.SwitchActiveBuildTarget(BuildTarget.StandaloneLinux);
+                Debug.Log("activeBuildTarget can not be  "
+                    + EditorUserBuildSettings.activeBuildTarget + 
+                    " use buildTarget parameter to open Unity.");
             }
         }
 
