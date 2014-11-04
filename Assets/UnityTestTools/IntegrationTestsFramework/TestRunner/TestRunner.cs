@@ -15,9 +15,11 @@ namespace UnityTest
     {
         static private readonly TestResultRenderer k_ResultRenderer = new TestResultRenderer();
 
+		public bool cleanupGameObjects;
         public TestComponent currentTest;
         private List<TestResult> m_ResultList = new List<TestResult>();
         private List<TestComponent> m_TestComponents;
+		private List<GameObject> m_ListOfGameObjectsOnTheScene;
 
         public bool isInitializedByRunner
         {
@@ -109,6 +111,9 @@ namespace UnityTest
             // init test provider
             m_TestsProvider = new IntegrationTestsProvider(m_ResultList.Select(result => result.TestComponent as ITestComponent));
             m_ReadyToRun = true;
+
+			if(cleanupGameObjects)
+				m_ListOfGameObjectsOnTheScene = GetAllGameObjectsFromTheScene();
         }
 
         private static IEnumerable<TestComponent> ParseListForGroups(IEnumerable<TestComponent> tests)
@@ -365,7 +370,25 @@ namespace UnityTest
             if (!testResult.IsSuccess
                 && testResult.Executed
                 && !testResult.IsIgnored) k_ResultRenderer.AddResults(Application.loadedLevelName, testResult);
+
+			if(cleanupGameObjects)
+				RemoveAllNewGameObjectsFromTheScene();
         }
+
+		private List<GameObject> GetAllGameObjectsFromTheScene()
+		{
+			return UnityEngine.Object.FindObjectsOfType<GameObject>().Where(go=>go.activeInHierarchy).ToList();
+		}
+		
+		private void RemoveAllNewGameObjectsFromTheScene()
+		{
+			if(m_ListOfGameObjectsOnTheScene == null) return;
+			foreach(var go in GetAllGameObjectsFromTheScene())
+			{
+				if(m_ListOfGameObjectsOnTheScene.Contains(go)) continue;
+				DestroyImmediate(go);
+			}
+		}
 
         #region Test Runner Helpers
 
@@ -388,7 +411,6 @@ namespace UnityTest
         {
             var runner = new GameObject("TestRunner");
             var component = runner.AddComponent<TestRunner>();
-            component.hideFlags = HideFlags.NotEditable;
             Debug.Log("Created Test Runner");
             return runner;
         }
