@@ -212,7 +212,7 @@ namespace UnityTest
             }
 
             var tests = TestComponent.FindAllTestsOnScene();
-            var skipList = gameObject.GetComponentsInChildren(typeof(TestComponent), true);
+            var skipList = gameObject.GetComponentsInChildren(typeof(TestComponent), true).ToList();
             tests.RemoveAll(skipList.Contains);
             foreach (var test in tests)
             {
@@ -228,7 +228,7 @@ namespace UnityTest
             FocusWindowIfItsOpen(GetType());
 
             m_TestsToRun = tests.Where(t => t is TestComponent).Cast<TestComponent>().ToList();
-            var temp = m_TestsToRun.Where(t => t.dynamic).ToArray();
+            var temp = m_TestsToRun.Where(t => t.dynamic).ToList();
             m_DynamicTestsToRun = temp.Select(c => c.dynamicTypeName).ToList();
             m_TestsToRun.RemoveAll(temp.Contains);
 
