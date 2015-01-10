@@ -29,6 +29,7 @@ namespace UnityTest
         {
             _prefsKey = prefsKey;
             Load();
+            UpdateCounters(Enumerable.Empty<ITestResult>());
         }
             
         public void Load()
