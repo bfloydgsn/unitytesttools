@@ -398,10 +398,12 @@ namespace UnityTest
             {
                 RunTests(TestComponent.FindAllTestsOnScene().Cast<ITestComponent>().ToList());
             }
+            EditorGUI.BeginDisabledGroup(!Selection.gameObjects.Any (t => t.GetComponent(typeof(ITestComponent))));
 			if (GUILayout.Button(m_GUIRunSelectedTests, EditorStyles.toolbarButton))
             {
                 RunTests(Selection.gameObjects.Select(t => t.GetComponent(typeof(TestComponent))).Cast<ITestComponent>().ToList());
             }
+            EditorGUI.EndDisabledGroup();
 			if (GUILayout.Button(m_GUICreateNewTest, EditorStyles.toolbarButton))
             {
                 var test = TestComponent.CreateTest();
