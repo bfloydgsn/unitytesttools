@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace UnityTest
 {
+
     public class UnitTestsRunnerSettings : ProjectSettingsBase
     {
         public bool optionsFoldout;

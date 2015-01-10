@@ -25,7 +25,7 @@ namespace UnityTest
 
         private TimeSpan m_Duration;
 
-        public ResultSummarizer(ITestResult[] results)
+        public ResultSummarizer(IEnumerable<ITestResult> results)
         {
             foreach (var result in results)
                 Summarize(result);

@@ -13,10 +13,11 @@ namespace UnityTest
         private static readonly IUnitTestEngine k_TestEngine = new NUnitTestEngine();
 
         [SerializeField] private List<UnitTestResult> m_ResultList = new List<UnitTestResult>();
-        [SerializeField] private string[] m_AvailableCategories;
         [SerializeField] private List<string> m_FoldMarkers = new List<string>();
         [SerializeField] private List<UnitTestRendererLine> m_SelectedLines = new List<UnitTestRendererLine>();
         UnitTestRendererLine m_TestLines;
+        
+        private TestFilterSettings m_FilterSettings;
 
         #region runner steering vars
         private Vector2 m_TestListScroll, m_TestInfoScroll;
@@ -35,10 +36,6 @@ namespace UnityTest
         private readonly GUIContent m_GUIShowDetailsBelowTests = new GUIContent("Show details below tests", "Show run details below test list");
         private readonly GUIContent m_GUIRunTestsOnNewScene = new GUIContent("Run tests on a new scene", "Run tests on a new scene");
         private readonly GUIContent m_GUIAutoSaveSceneBeforeRun = new GUIContent("Autosave scene", "The runner will automatically save the current scene changes before it starts");
-        private GUIContent m_GUIShowSucceededTests = new GUIContent("Succeeded", Icons.SuccessImg, "Show tests that succeeded");
-        private GUIContent m_GUIShowFailedTests = new GUIContent("Failed", Icons.FailImg, "Show tests that failed");
-        private GUIContent m_GUIShowIgnoredTests = new GUIContent("Ignored", Icons.IgnoreImg, "Show tests that are ignored");
-        private GUIContent m_GUIShowNotRunTests = new GUIContent("Not Run", Icons.UnknownImg, "Show tests that didn't run");
         #endregion
 
         public UnitTestView()
@@ -51,6 +48,7 @@ namespace UnityTest
         {
             s_Instance = this;
             m_Settings = ProjectSettingsBase.Load<UnitTestsRunnerSettings>();
+            m_FilterSettings = new TestFilterSettings("UnityTest.UnitTestView");
             RefreshTests();
             EnableBackgroundRunner(m_Settings.runOnRecompilation);
         }
@@ -92,7 +90,7 @@ namespace UnityTest
 
             GUILayout.FlexibleSpace();
             
-            DrawFilters ();
+            m_FilterSettings.OnGUI ();
 
             if (GUILayout.Button(m_GUIOptionButton, EditorStyles.toolbarButton))
             { DrawOptions(_optionsButtonRect);
@@ -116,18 +114,6 @@ namespace UnityTest
             EditorGUILayout.EndVertical();
         }
 
-        private string[] GetSelectedCategories()
-        {
-            var selectedCategories = new List<string>();
-            foreach (var availableCategory in m_AvailableCategories)
-            {
-                var idx = Array.FindIndex(m_AvailableCategories, a => a == availableCategory);
-                var mask = 1 << idx;
-                if ((m_Settings.categoriesMask & mask) != 0) selectedCategories.Add(availableCategory);
-            }
-            return selectedCategories.ToArray();
-        }
-
         private void RenderTestList()
         {
             EditorGUILayout.BeginVertical(Styles.testList);
@@ -136,15 +122,7 @@ namespace UnityTest
                                                                GUILayout.MaxWidth(2000));
             if (m_TestLines != null)
             {
-                var options = new RenderingOptions();
-                options.showSucceeded = m_Settings.showSucceeded;
-                options.showFailed = m_Settings.showFailed;
-                options.showIgnored = m_Settings.showIgnored;
-                options.showNotRunned = m_Settings.showNotRun;
-                options.nameFilter = m_Settings.testFilter;
-                options.categories = GetSelectedCategories();
-
-                if (m_TestLines.Render(options)) Repaint();
+                if (m_TestLines.Render(m_FilterSettings.BuildRenderingOptions())) Repaint();
             }
             EditorGUILayout.EndScrollView();
             EditorGUILayout.EndVertical();
@@ -202,25 +180,6 @@ namespace UnityTest
 
             EditorGUILayout.EndScrollView();
         }
-
-        private void DrawFilters()
-        {
-            EditorGUI.BeginChangeCheck();
-            
-            m_Settings.testFilter = GUILayout.TextField(m_Settings.testFilter, "ToolbarSeachTextField", GUILayout.MinWidth(100), GUILayout.MaxWidth(300), GUILayout.ExpandWidth(true));
-            if(GUILayout.Button (GUIContent.none, string.IsNullOrEmpty(m_Settings.testFilter) ? "ToolbarSeachCancelButtonEmpty" : "ToolbarSeachCancelButton"))
-                m_Settings.testFilter = string.Empty;
-            
-            if (m_AvailableCategories != null && m_AvailableCategories.Length > 0)
-                m_Settings.categoriesMask = EditorGUILayout.MaskField(m_Settings.categoriesMask, m_AvailableCategories, EditorStyles.toolbarDropDown, GUILayout.MaxWidth(90));
-            
-            m_Settings.showSucceeded = GUILayout.Toggle(m_Settings.showSucceeded, m_GUIShowSucceededTests, EditorStyles.toolbarButton);
-            m_Settings.showFailed = GUILayout.Toggle(m_Settings.showFailed, m_GUIShowFailedTests, EditorStyles.toolbarButton);
-            m_Settings.showIgnored = GUILayout.Toggle(m_Settings.showIgnored, m_GUIShowIgnoredTests, EditorStyles.toolbarButton);
-            m_Settings.showNotRun = GUILayout.Toggle(m_Settings.showNotRun, m_GUIShowNotRunTests, EditorStyles.toolbarButton);
-            
-            if (EditorGUI.EndChangeCheck()) m_Settings.Save();
-        }
         
         private void ToggleRunOnRecompilation()
         {
@@ -241,21 +200,11 @@ namespace UnityTest
             
             menu.DropDown(optionsButtonRect);
         }
-        
-        private void UpdateTestCounters()
-        {
-            var summary = new ResultSummarizer(m_ResultList.ToArray());
-            
-            m_GUIShowSucceededTests.text = summary.Passed.ToString();
-            m_GUIShowFailedTests.text = (summary.Errors + summary.Failures + summary.Inconclusive).ToString();
-            m_GUIShowIgnoredTests.text = (summary.Ignored + summary.NotRunnable).ToString();
-            m_GUIShowNotRunTests.text = (summary.TestsNotRun - summary.Ignored - summary.NotRunnable).ToString();
-        }
 
         private void RefreshTests()
         {
             UnitTestResult[] newResults;
-            m_TestLines = k_TestEngine.GetTests(out newResults, out m_AvailableCategories);
+            m_TestLines = k_TestEngine.GetTests(out newResults, out m_FilterSettings.AvailableCategories);
 
             foreach (var newResult in newResults)
             {
@@ -271,7 +220,7 @@ namespace UnityTest
 
             m_ResultList = new List<UnitTestResult>(newResults);
             
-            UpdateTestCounters();
+            m_FilterSettings.UpdateCounters(m_ResultList.Cast<ITestResult>());
 
             Repaint();
         }
