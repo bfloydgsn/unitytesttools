@@ -31,7 +31,6 @@ namespace UnityTest
         private readonly GUIContent m_GUIRunSelectedTestsIcon = new GUIContent("Run Selected", "Run selected tests");
         private readonly GUIContent m_GUIRunAllTestsIcon = new GUIContent("Run All", "Run all tests");
         private readonly GUIContent m_GUIRerunFailedTestsIcon = new GUIContent("Rerun Failed", "Rerun failed tests");
-        private readonly GUIContent m_GUIOptionButton = new GUIContent(Icons.GearImg);
         private readonly GUIContent m_GUIRunOnRecompile = new GUIContent("Run on recompile", "Run all tests after recompilation");
         private readonly GUIContent m_GUIShowDetailsBelowTests = new GUIContent("Show details below tests", "Show run details below test list");
         private readonly GUIContent m_GUIRunTestsOnNewScene = new GUIContent("Run tests on a new scene", "Run tests on a new scene");

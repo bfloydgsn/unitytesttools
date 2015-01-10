@@ -24,7 +24,6 @@ namespace UnityTest
         public static readonly Texture2D InconclusiveImg;
         public static readonly Texture2D StopwatchImg;
         public static readonly Texture2D PlusImg;
-        public static readonly Texture GearImg;
 
         public static readonly GUIContent GUIUnknownImg;
         public static readonly GUIContent GUIInconclusiveImg;
@@ -67,8 +66,6 @@ namespace UnityTest
             GUIIgnoreImg = new GUIContent(IgnoreImg);
             GUISuccessImg = new GUIContent(SuccessImg);
             GUIFailImg = new GUIContent(FailImg);
-            
-            GearImg = EditorGUIUtility.IconContent("_Popup").image;
         }
 
         private static Texture2D LoadTexture(string fileName)

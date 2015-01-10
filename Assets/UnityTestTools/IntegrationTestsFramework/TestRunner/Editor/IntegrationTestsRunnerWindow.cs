@@ -11,7 +11,6 @@ namespace UnityTest
     public class IntegrationTestsRunnerWindow : EditorWindow, IHasCustomMenu
     {
         #region GUI Contents
-        private readonly GUIContent m_GUIOptionsLabel = new GUIContent(Icons.GearImg, "Options");
         private readonly GUIContent m_GUICreateNewTest = new GUIContent("Create", "Create new test");
         private readonly GUIContent m_GUIRunSelectedTests = new GUIContent("Run Selected", "Run selected test(s)");
         private readonly GUIContent m_GUIRunAllTests = new GUIContent("Run All", "Run all tests");

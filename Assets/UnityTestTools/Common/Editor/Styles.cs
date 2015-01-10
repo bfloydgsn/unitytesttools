@@ -7,9 +7,6 @@ namespace UnityTest
 {
     public static class Styles
     {
-        public static GUIStyle buttonLeft;
-        public static GUIStyle buttonMid;
-        public static GUIStyle buttonRight;
         public static GUIStyle info;
         public static GUIStyle testList;
 
@@ -22,10 +19,6 @@ namespace UnityTest
 
         static Styles()
         {
-            buttonLeft = GUI.skin.FindStyle(GUI.skin.button.name + "left");
-            buttonMid = GUI.skin.FindStyle(GUI.skin.button.name + "mid");
-            buttonRight = GUI.skin.FindStyle(GUI.skin.button.name + "right");
-
             info = new GUIStyle(EditorStyles.wordWrappedLabel);
             info.wordWrap = false;
             info.stretchHeight = true;
