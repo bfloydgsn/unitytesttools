@@ -11,11 +11,10 @@ namespace UnityTest
     public class IntegrationTestsRunnerWindow : EditorWindow
     {
         #region GUI Contents
-        private readonly GUIContent m_GUIOptionsHideLabel = new GUIContent("Hide", Icons.GearImg);
-        private readonly GUIContent m_GUIOptionsShowLabel = new GUIContent("Options", Icons.GearImg);
-        private readonly GUIContent m_GUICreateNewTest = new GUIContent(Icons.PlusImg, "Create new test");
-        private readonly GUIContent m_GUIRunSelectedTests = new GUIContent(Icons.RunImg, "Run selected test(s)");
-        private readonly GUIContent m_GUIRunAllTests = new GUIContent(Icons.RunAllImg, "Run all tests");
+        private readonly GUIContent m_GUIOptionsLabel = new GUIContent(Icons.GearImg, "Options");
+        private readonly GUIContent m_GUICreateNewTest = new GUIContent("Create", "Create new test");
+        private readonly GUIContent m_GUIRunSelectedTests = new GUIContent("Run Selected", "Run selected test(s)");
+        private readonly GUIContent m_GUIRunAllTests = new GUIContent("Run All", "Run all tests");
         private readonly GUIContent m_GUIAdvancedFilterShow = new GUIContent("Advanced");
         private readonly GUIContent m_GUIAdvancedFilterHide = new GUIContent("Hide");
         private readonly GUIContent m_GUIAddGoUderTest = new GUIContent("Add GOs under test", "Add new GameObject under selected test");
@@ -395,16 +394,15 @@ namespace UnityTest
         {
             EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
 			EditorGUI.BeginDisabledGroup(EditorApplication.isPlayingOrWillChangePlaymode);
-            var layoutOptions = new[] { GUILayout.Width(32) };
-            if (GUILayout.Button(m_GUIRunAllTests, EditorStyles.toolbarButton, layoutOptions))
+            if (GUILayout.Button(m_GUIRunAllTests, EditorStyles.toolbarButton))
             {
                 RunTests(TestComponent.FindAllTestsOnScene().Cast<ITestComponent>().ToList());
             }
-			if (GUILayout.Button(m_GUIRunSelectedTests, EditorStyles.toolbarButton, layoutOptions))
+			if (GUILayout.Button(m_GUIRunSelectedTests, EditorStyles.toolbarButton))
             {
                 RunTests(Selection.gameObjects.Select(t => t.GetComponent(typeof(TestComponent))).Cast<ITestComponent>().ToList());
             }
-			if (GUILayout.Button(m_GUICreateNewTest, EditorStyles.toolbarButton, layoutOptions))
+			if (GUILayout.Button(m_GUICreateNewTest, EditorStyles.toolbarButton))
             {
                 var test = TestComponent.CreateTest();
                 if (Selection.gameObjects.Length == 1
@@ -437,27 +435,19 @@ namespace UnityTest
 			if(EditorGUI.EndChangeCheck())
 				m_Settings.Save();
 
-			if (GUILayout.Button(m_Settings.showOptions ? m_GUIOptionsHideLabel : m_GUIOptionsShowLabel, EditorStyles.toolbarButton, GUILayout.Height(24), GUILayout.Width(80)))
-                m_Settings.showOptions = !m_Settings.showOptions;
+			if (GUILayout.Button(m_GUIOptionsLabel, EditorStyles.toolbarButton))
+                ShowOptionsMenu();
             EditorGUILayout.EndHorizontal();
-
-            if (m_Settings.showOptions)
-                PrintOptions();
         }
-
-        public void PrintOptions()
+        
+        public void ShowOptionsMenu()
         {
-            var style = EditorStyles.toggle;
-            EditorGUILayout.BeginVertical();
-            EditorGUI.BeginChangeCheck();
-
-            m_Settings.addNewGameObjectUnderSelectedTest = EditorGUILayout.Toggle(m_GUIAddGoUderTest, m_Settings.addNewGameObjectUnderSelectedTest, style);
-            m_Settings.blockUIWhenRunning = EditorGUILayout.Toggle(m_GUIBlockUI, m_Settings.blockUIWhenRunning, style);
-            if (EditorGUI.EndChangeCheck()) m_Settings.Save();
-
-            EditorGUILayout.EndVertical();
+        	var menu = new GenericMenu();
+        	menu.AddItem(m_GUIAddGoUderTest, m_Settings.addNewGameObjectUnderSelectedTest, m_Settings.ToggleAddNewGameObjectUnderSelectedTest);
+        	menu.AddItem(m_GUIBlockUI, m_Settings.blockUIWhenRunning, m_Settings.ToggleBlockUIWhenRunning);
+        	menu.ShowAsContext();
         }
-
+        
         private bool PrintTestList(IntegrationTestRendererBase[] renderedLines)
         {
             if (renderedLines == null) return false;

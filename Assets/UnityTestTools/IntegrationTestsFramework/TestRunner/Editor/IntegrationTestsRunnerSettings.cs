@@ -7,7 +7,6 @@ namespace UnityTest
 {
     public class IntegrationTestsRunnerSettings : ProjectSettingsBase
     {
-        public bool showOptions;
         [NonSerialized] public string filterString;
 		[NonSerialized] public bool showSucceededTest = true;
 		[NonSerialized] public bool showFailedTest = true;
@@ -38,6 +37,16 @@ namespace UnityTest
 		public void OnDisable()
 		{
 			Save();
+		}
+
+		public void ToggleAddNewGameObjectUnderSelectedTest() {
+			addNewGameObjectUnderSelectedTest = !addNewGameObjectUnderSelectedTest;
+			Save();
+		}
+		
+		public void ToggleBlockUIWhenRunning() {
+			blockUIWhenRunning = !blockUIWhenRunning;
+			Save ();
 		}
     }
 }
