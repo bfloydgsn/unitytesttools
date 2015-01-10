@@ -14,6 +14,7 @@ namespace UnityTest
         public static GUIStyle label;
         public static GUIStyle selectedFoldout;
         public static GUIStyle foldout;
+        public static GUIStyle toolbarLabel;
 
         private static readonly Color k_SelectedColor = new Color(0.3f, 0.5f, 0.85f);
 
@@ -37,6 +38,10 @@ namespace UnityTest
             selectedFoldout.onFocused.textColor = selectedFoldout.focused.textColor =
                                                       selectedFoldout.onActive.textColor = selectedFoldout.active.textColor =
                                                                                                selectedFoldout.onNormal.textColor = selectedFoldout.normal.textColor = k_SelectedColor;
+                                                                                               
+            toolbarLabel = new GUIStyle(EditorStyles.toolbarButton);
+            toolbarLabel.normal.background = null;
+            toolbarLabel.contentOffset = new Vector2(0, -2);
         }
     }
 }
