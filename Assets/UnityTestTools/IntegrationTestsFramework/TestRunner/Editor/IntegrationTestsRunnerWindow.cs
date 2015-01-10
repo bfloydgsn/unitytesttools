@@ -153,6 +153,11 @@ namespace UnityTest
             if (selectedInHierarchy) selectedInHierarchy = false;
             else s_Instance.RebuildTestList();
         }
+        
+        public static TestResult GetResultForTest(TestComponent tc)
+        {
+            return s_Instance.m_ResultList.FirstOrDefault(r => r.GameObject == tc.gameObject);
+        }
 
         public static void OnHierarchyWindowItemDraw(int id, Rect rect)
         {
@@ -160,26 +165,6 @@ namespace UnityTest
             if (o is GameObject)
             {
                 var go = o as GameObject;
-                var tc = go.GetComponent<TestComponent>();
-                if (tc != null)
-                {
-                    if (!EditorApplication.isPlayingOrWillChangePlaymode
-                        && rect.Contains(Event.current.mousePosition)
-                        && Event.current.type == EventType.MouseDown
-                        && Event.current.button == 1)
-                    {
-                        IntegrationTestRendererBase.DrawContextMenu(tc);
-                    }
-
-                    EditorGUIUtility.SetIconSize(new Vector2(15, 15));
-                    var result = s_Instance.m_ResultList.Find(r => r.GameObject == go);
-                    if (result != null)
-                    {
-                        var icon = result.Executed ? IntegrationTestRendererBase.GetIconForResult(result.resultType) : Icons.UnknownImg;
-                        EditorGUI.LabelField(new Rect(rect.xMax - 18, rect.yMin - 2, rect.width, rect.height), new GUIContent(icon));
-                    }
-                    EditorGUIUtility.SetIconSize(Vector2.zero);
-                }
 
                 if (Event.current.type == EventType.MouseDown
                     && Event.current.button == 0
