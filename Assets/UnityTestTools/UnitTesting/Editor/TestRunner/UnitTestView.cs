@@ -90,7 +90,6 @@ namespace UnityTest
             GUILayout.FlexibleSpace();
             
             DrawFilters ();
-            
 
             if (GUILayout.Button(m_Settings.optionsFoldout ? m_GUIHideButton : m_GUIOptionButton, EditorStyles.toolbarButton, GUILayout.Height(24), GUILayout.Width(80)))
             {
@@ -99,14 +98,6 @@ namespace UnityTest
             EditorGUILayout.EndHorizontal();
 
             if (m_Settings.optionsFoldout) DrawOptions();
-
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Filter:", GUILayout.Width(35));
-            m_Settings.testFilter = EditorGUILayout.TextField(m_Settings.testFilter, EditorStyles.textField);
-
-            if (m_AvailableCategories != null && m_AvailableCategories.Length > 0)
-                m_Settings.categoriesMask = EditorGUILayout.MaskField(m_Settings.categoriesMask, m_AvailableCategories, GUILayout.MaxWidth(90));
-            EditorGUILayout.EndHorizontal();
 
             if (m_Settings.horizontalSplit)
                 EditorGUILayout.BeginVertical();
@@ -214,12 +205,19 @@ namespace UnityTest
         private void DrawFilters()
         {
             EditorGUI.BeginChangeCheck();
-            EditorGUILayout.BeginHorizontal();
+            
+            m_Settings.testFilter = GUILayout.TextField(m_Settings.testFilter, "ToolbarSeachTextField", GUILayout.MinWidth(100), GUILayout.MaxWidth(300), GUILayout.ExpandWidth(true));
+            if(GUILayout.Button (GUIContent.none, string.IsNullOrEmpty(m_Settings.testFilter) ? "ToolbarSeachCancelButtonEmpty" : "ToolbarSeachCancelButton"))
+                m_Settings.testFilter = string.Empty;
+            
+            if (m_AvailableCategories != null && m_AvailableCategories.Length > 0)
+                m_Settings.categoriesMask = EditorGUILayout.MaskField(m_Settings.categoriesMask, m_AvailableCategories, EditorStyles.toolbarDropDown, GUILayout.MaxWidth(90));
+            
             m_Settings.showSucceeded = GUILayout.Toggle(m_Settings.showSucceeded, m_GUIShowSucceededTests, EditorStyles.toolbarButton);
             m_Settings.showFailed = GUILayout.Toggle(m_Settings.showFailed, m_GUIShowFailedTests, EditorStyles.toolbarButton);
             m_Settings.showIgnored = GUILayout.Toggle(m_Settings.showIgnored, m_GUIShowIgnoredTests, EditorStyles.toolbarButton);
             m_Settings.showNotRun = GUILayout.Toggle(m_Settings.showNotRun, m_GUIShowNotRunTests, EditorStyles.toolbarButton);
-            EditorGUILayout.EndHorizontal();
+            
             if (EditorGUI.EndChangeCheck()) m_Settings.Save();
         }
 
