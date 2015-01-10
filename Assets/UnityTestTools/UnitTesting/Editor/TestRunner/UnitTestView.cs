@@ -66,6 +66,8 @@ namespace UnityTest
         {
             RefreshTests();
         }
+        
+        private Rect _optionsButtonRect;
 
         public void OnGUI()
         {
@@ -91,13 +93,11 @@ namespace UnityTest
             
             DrawFilters ();
 
-            if (GUILayout.Button(m_Settings.optionsFoldout ? m_GUIHideButton : m_GUIOptionButton, EditorStyles.toolbarButton, GUILayout.Height(24), GUILayout.Width(80)))
-            {
-                m_Settings.optionsFoldout = !m_Settings.optionsFoldout;
+            if (GUILayout.Button(m_GUIOptionButton, EditorStyles.toolbarButton))
+            { DrawOptions(_optionsButtonRect);
             }
+            if(Event.current.type == EventType.Repaint) _optionsButtonRect = GUILayoutUtility.GetLastRect();
             EditorGUILayout.EndHorizontal();
-
-            if (m_Settings.optionsFoldout) DrawOptions();
 
             if (m_Settings.horizontalSplit)
                 EditorGUILayout.BeginVertical();
@@ -220,26 +220,25 @@ namespace UnityTest
             
             if (EditorGUI.EndChangeCheck()) m_Settings.Save();
         }
-
-        private void DrawOptions()
+        
+        private void ToggleRunOnRecompilation()
         {
-            EditorGUI.BeginChangeCheck();
+            m_Settings.runOnRecompilation = !m_Settings.runOnRecompilation;
+            EnableBackgroundRunner(m_Settings.runOnRecompilation);
+        }
 
-            EditorGUI.BeginChangeCheck();
-            m_Settings.runOnRecompilation = EditorGUILayout.Toggle(m_GUIRunOnRecompile, m_Settings.runOnRecompilation);
-            if (EditorGUI.EndChangeCheck()) EnableBackgroundRunner(m_Settings.runOnRecompilation);
-
-            m_Settings.runTestOnANewScene = EditorGUILayout.Toggle(m_GUIRunTestsOnNewScene, m_Settings.runTestOnANewScene);
-            EditorGUI.BeginDisabledGroup(!m_Settings.runTestOnANewScene);
-            m_Settings.autoSaveSceneBeforeRun = EditorGUILayout.Toggle(m_GUIAutoSaveSceneBeforeRun, m_Settings.autoSaveSceneBeforeRun);
-            EditorGUI.EndDisabledGroup();
-            m_Settings.horizontalSplit = EditorGUILayout.Toggle(m_GUIShowDetailsBelowTests, m_Settings.horizontalSplit);
-
-            if (EditorGUI.EndChangeCheck())
-            {
-                m_Settings.Save();
-            }
-            EditorGUILayout.Space();
+        private void DrawOptions(Rect optionsButtonRect)
+        {
+            var menu = new GenericMenu();
+            menu.AddItem(m_GUIRunOnRecompile, m_Settings.runOnRecompilation, ToggleRunOnRecompilation);
+            menu.AddItem(m_GUIRunTestsOnNewScene, m_Settings.runTestOnANewScene, m_Settings.ToggleRunTestOnANewScene);
+            if(!m_Settings.runTestOnANewScene)
+                menu.AddDisabledItem(m_GUIAutoSaveSceneBeforeRun);
+            else
+                menu.AddItem(m_GUIAutoSaveSceneBeforeRun, m_Settings.autoSaveSceneBeforeRun, m_Settings.ToggleAutoSaveSceneBeforeRun);
+            menu.AddItem(m_GUIShowDetailsBelowTests, m_Settings.horizontalSplit, m_Settings.ToggleHorizontalSplit);
+            
+            menu.DropDown(optionsButtonRect);
         }
         
         private void UpdateTestCounters()

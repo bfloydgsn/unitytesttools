@@ -19,5 +19,20 @@ namespace UnityTest
         public bool showIgnored = true;
         public bool showNotRun = true;
         public bool showSucceeded = true;
+
+        public void ToggleRunTestOnANewScene() {
+            runTestOnANewScene = !runTestOnANewScene;
+            Save ();
+        }
+        
+        public void ToggleAutoSaveSceneBeforeRun() {
+            autoSaveSceneBeforeRun = !autoSaveSceneBeforeRun;
+            Save ();
+        }
+        
+        public void ToggleHorizontalSplit() {
+            horizontalSplit = !horizontalSplit;
+            Save ();
+        }
     }
 }
