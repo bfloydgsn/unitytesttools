@@ -27,11 +27,10 @@ namespace UnityTest
         private UnitTestsRunnerSettings m_Settings;
 
         #region GUI Contents
-        private readonly GUIContent m_GUIRunSelectedTestsIcon = new GUIContent(Icons.RunImg, "Run selected tests");
-        private readonly GUIContent m_GUIRunAllTestsIcon = new GUIContent(Icons.RunAllImg, "Run all tests");
-        private readonly GUIContent m_GUIRerunFailedTestsIcon = new GUIContent(Icons.RunFailedImg, "Rerun failed tests");
-        private readonly GUIContent m_GUIOptionButton = new GUIContent("Options", Icons.GearImg);
-        private readonly GUIContent m_GUIHideButton = new GUIContent("Hide", Icons.GearImg);
+        private readonly GUIContent m_GUIRunSelectedTestsIcon = new GUIContent("Run Selected", "Run selected tests");
+        private readonly GUIContent m_GUIRunAllTestsIcon = new GUIContent("Run All", "Run all tests");
+        private readonly GUIContent m_GUIRerunFailedTestsIcon = new GUIContent("Rerun Failed", "Rerun failed tests");
+        private readonly GUIContent m_GUIOptionButton = new GUIContent(Icons.GearImg);
         private readonly GUIContent m_GUIRunOnRecompile = new GUIContent("Run on recompile", "Run all tests after recompilation");
         private readonly GUIContent m_GUIShowDetailsBelowTests = new GUIContent("Show details below tests", "Show run details below test list");
         private readonly GUIContent m_GUIRunTestsOnNewScene = new GUIContent("Run tests on a new scene", "Run tests on a new scene");
@@ -80,10 +79,12 @@ namespace UnityTest
                 RunTests();
                 GUIUtility.ExitGUI();
             }
+            EditorGUI.BeginDisabledGroup(!m_TestLines.IsAnySelected);
             if (GUILayout.Button(m_GUIRunSelectedTestsIcon, EditorStyles.toolbarButton))
             {
                 m_TestLines.RunSelectedTests();
             }
+            EditorGUI.EndDisabledGroup();
             if (GUILayout.Button(m_GUIRerunFailedTestsIcon, EditorStyles.toolbarButton))
             {
                 m_TestLines.RunTests(m_ResultList.Where(result => result.IsFailure || result.IsError).Select(l => l.FullName).ToArray());
