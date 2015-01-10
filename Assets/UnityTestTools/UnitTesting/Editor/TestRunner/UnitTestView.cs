@@ -36,10 +36,10 @@ namespace UnityTest
         private readonly GUIContent m_GUIShowDetailsBelowTests = new GUIContent("Show details below tests", "Show run details below test list");
         private readonly GUIContent m_GUIRunTestsOnNewScene = new GUIContent("Run tests on a new scene", "Run tests on a new scene");
         private readonly GUIContent m_GUIAutoSaveSceneBeforeRun = new GUIContent("Autosave scene", "The runner will automatically save the current scene changes before it starts");
-        private readonly GUIContent m_GUIShowSucceededTests = new GUIContent("Succeeded", Icons.SuccessImg, "Show tests that succeeded");
-        private readonly GUIContent m_GUIShowFailedTests = new GUIContent("Failed", Icons.FailImg, "Show tests that failed");
-        private readonly GUIContent m_GUIShowIgnoredTests = new GUIContent("Ignored", Icons.IgnoreImg, "Show tests that are ignored");
-        private readonly GUIContent m_GUIShowNotRunTests = new GUIContent("Not Run", Icons.UnknownImg, "Show tests that didn't run");
+        private GUIContent m_GUIShowSucceededTests = new GUIContent("Succeeded", Icons.SuccessImg, "Show tests that succeeded");
+        private GUIContent m_GUIShowFailedTests = new GUIContent("Failed", Icons.FailImg, "Show tests that failed");
+        private GUIContent m_GUIShowIgnoredTests = new GUIContent("Ignored", Icons.IgnoreImg, "Show tests that are ignored");
+        private GUIContent m_GUIShowNotRunTests = new GUIContent("Not Run", Icons.UnknownImg, "Show tests that didn't run");
         #endregion
 
         public UnitTestView()
@@ -69,29 +69,30 @@ namespace UnityTest
 
         public void OnGUI()
         {
-            GUILayout.Space(10);
             EditorGUILayout.BeginVertical();
 
-            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
 
-            var layoutOptions = new[] { GUILayout.Width(32), GUILayout.Height(24) };
-            if (GUILayout.Button(m_GUIRunAllTestsIcon, Styles.buttonLeft, layoutOptions))
+            if (GUILayout.Button(m_GUIRunAllTestsIcon, EditorStyles.toolbarButton))
             {
                 RunTests();
                 GUIUtility.ExitGUI();
             }
-            if (GUILayout.Button(m_GUIRunSelectedTestsIcon, Styles.buttonMid, layoutOptions))
+            if (GUILayout.Button(m_GUIRunSelectedTestsIcon, EditorStyles.toolbarButton))
             {
                 m_TestLines.RunSelectedTests();
             }
-            if (GUILayout.Button(m_GUIRerunFailedTestsIcon, Styles.buttonRight, layoutOptions))
+            if (GUILayout.Button(m_GUIRerunFailedTestsIcon, EditorStyles.toolbarButton))
             {
                 m_TestLines.RunTests(m_ResultList.Where(result => result.IsFailure || result.IsError).Select(l => l.FullName).ToArray());
             }
 
             GUILayout.FlexibleSpace();
+            
+            DrawFilters ();
+            
 
-            if (GUILayout.Button(m_Settings.optionsFoldout ? m_GUIHideButton : m_GUIOptionButton, GUILayout.Height(24), GUILayout.Width(80)))
+            if (GUILayout.Button(m_Settings.optionsFoldout ? m_GUIHideButton : m_GUIOptionButton, EditorStyles.toolbarButton, GUILayout.Height(24), GUILayout.Width(80)))
             {
                 m_Settings.optionsFoldout = !m_Settings.optionsFoldout;
             }
@@ -105,13 +106,7 @@ namespace UnityTest
 
             if (m_AvailableCategories != null && m_AvailableCategories.Length > 0)
                 m_Settings.categoriesMask = EditorGUILayout.MaskField(m_Settings.categoriesMask, m_AvailableCategories, GUILayout.MaxWidth(90));
-
-            if (GUILayout.Button(m_Settings.filtersFoldout ? "Hide" : "Advanced", GUILayout.Width(80), GUILayout.Height(15)))
-                m_Settings.filtersFoldout = !m_Settings.filtersFoldout;
             EditorGUILayout.EndHorizontal();
-
-            if (m_Settings.filtersFoldout)
-                DrawFilters();
 
             if (m_Settings.horizontalSplit)
                 EditorGUILayout.BeginVertical();
@@ -220,10 +215,10 @@ namespace UnityTest
         {
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.BeginHorizontal();
-            m_Settings.showSucceeded = GUILayout.Toggle(m_Settings.showSucceeded, m_GUIShowSucceededTests, GUI.skin.FindStyle(GUI.skin.button.name + "left"), GUILayout.ExpandWidth(true));
-            m_Settings.showFailed = GUILayout.Toggle(m_Settings.showFailed, m_GUIShowFailedTests, GUI.skin.FindStyle(GUI.skin.button.name + "mid"));
-            m_Settings.showIgnored = GUILayout.Toggle(m_Settings.showIgnored, m_GUIShowIgnoredTests, GUI.skin.FindStyle(GUI.skin.button.name + "mid"));
-            m_Settings.showNotRun = GUILayout.Toggle(m_Settings.showNotRun, m_GUIShowNotRunTests, GUI.skin.FindStyle(GUI.skin.button.name + "right"), GUILayout.ExpandWidth(true));
+            m_Settings.showSucceeded = GUILayout.Toggle(m_Settings.showSucceeded, m_GUIShowSucceededTests, EditorStyles.toolbarButton);
+            m_Settings.showFailed = GUILayout.Toggle(m_Settings.showFailed, m_GUIShowFailedTests, EditorStyles.toolbarButton);
+            m_Settings.showIgnored = GUILayout.Toggle(m_Settings.showIgnored, m_GUIShowIgnoredTests, EditorStyles.toolbarButton);
+            m_Settings.showNotRun = GUILayout.Toggle(m_Settings.showNotRun, m_GUIShowNotRunTests, EditorStyles.toolbarButton);
             EditorGUILayout.EndHorizontal();
             if (EditorGUI.EndChangeCheck()) m_Settings.Save();
         }
@@ -248,6 +243,16 @@ namespace UnityTest
             }
             EditorGUILayout.Space();
         }
+        
+        private void UpdateTestCounters()
+        {
+            var summary = new ResultSummarizer(m_ResultList.ToArray());
+            
+            m_GUIShowSucceededTests.text = summary.Passed.ToString();
+            m_GUIShowFailedTests.text = (summary.Errors + summary.Failures + summary.Inconclusive).ToString();
+            m_GUIShowIgnoredTests.text = (summary.Ignored + summary.NotRunnable).ToString();
+            m_GUIShowNotRunTests.text = (summary.TestsNotRun - summary.Ignored - summary.NotRunnable).ToString();
+        }
 
         private void RefreshTests()
         {
@@ -267,6 +272,8 @@ namespace UnityTest
             TestLine.GetUnitTestResult = FindTestResult;
 
             m_ResultList = new List<UnitTestResult>(newResults);
+            
+            UpdateTestCounters();
 
             Repaint();
         }

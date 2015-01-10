@@ -78,11 +78,11 @@ namespace UnityTest
                 return false;
             if (options.categories != null && options.categories.Length > 0 && !options.categories.Any(c => m_Categories.Contains(c)))
                 return false;
-            if (!options.showIgnored && (m_Test.RunState == RunState.Ignored || m_Test.RunState == RunState.Skipped))
+            if (!options.showIgnored && (m_Test.RunState == RunState.Ignored || (result.Executed && m_Test.RunState == RunState.Skipped)))
                 return false;
-            if (!options.showFailed && (result.IsFailure || result.IsError || result.IsInconclusive))
+            if (!options.showFailed && result.Executed && (result.IsFailure || result.IsError || result.IsInconclusive))
                 return false;
-            if (!options.showNotRunned && !result.Executed)
+            if (!options.showNotRunned && !result.Executed && !result.IsIgnored)
                 return false;
             if (!options.showSucceeded && result.IsSuccess)
                 return false;

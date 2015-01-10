@@ -125,7 +125,19 @@ namespace UnityTest
         {
             m_Duration += TimeSpan.FromSeconds(result.Duration);
             m_ResultCount++;
-
+            
+            if(!result.Executed)
+            {
+                if(result.IsIgnored)
+                {
+                    m_IgnoreCount++;
+                    return;
+                }
+                
+                m_SkipCount++;
+                return;
+            }
+            
             switch (result.ResultState)
             {
                 case TestResultState.Success:

@@ -12,6 +12,7 @@ namespace UnityTest
         private void UpdateTestInfo(ITestResult result)
         {
             FindTestResult(result.Id).Update(result, false);
+            UpdateTestCounters();
         }
 
         private UnitTestResult FindTestResult(string resultId)
