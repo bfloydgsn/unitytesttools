@@ -24,7 +24,7 @@ namespace UnityTest
         public static readonly Texture2D InconclusiveImg;
         public static readonly Texture2D StopwatchImg;
         public static readonly Texture2D PlusImg;
-        public static readonly Texture2D GearImg;
+        public static readonly Texture GearImg;
 
         public static readonly GUIContent GUIUnknownImg;
         public static readonly GUIContent GUIInconclusiveImg;
@@ -53,7 +53,6 @@ namespace UnityTest
                 RunImg = LoadTexture("play_selected-darktheme.png");
                 RunFailedImg = LoadTexture("rerun-darktheme.png");
                 PlusImg = LoadTexture("create-darktheme.png");
-                GearImg = LoadTexture("options-darktheme.png");
             }
             else
             {
@@ -61,7 +60,6 @@ namespace UnityTest
                 RunImg = LoadTexture("play_selected-lighttheme.png");
                 RunFailedImg = LoadTexture("rerun-lighttheme.png");
                 PlusImg = LoadTexture("create-lighttheme.png");
-                GearImg = LoadTexture("options-lighttheme.png");
             }
 
             GUIUnknownImg = new GUIContent(UnknownImg);
@@ -69,6 +67,8 @@ namespace UnityTest
             GUIIgnoreImg = new GUIContent(IgnoreImg);
             GUISuccessImg = new GUIContent(SuccessImg);
             GUIFailImg = new GUIContent(FailImg);
+            
+            GearImg = EditorGUIUtility.IconContent("_Popup").image;
         }
 
         private static Texture2D LoadTexture(string fileName)
