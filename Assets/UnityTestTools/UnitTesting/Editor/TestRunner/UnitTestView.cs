@@ -58,11 +58,6 @@ namespace UnityTest
             s_Instance = null;
             EnableBackgroundRunner(false);
         }
-
-        public void Awake()
-        {
-            RefreshTests();
-        }
         
         private Rect _optionsButtonRect;
 
