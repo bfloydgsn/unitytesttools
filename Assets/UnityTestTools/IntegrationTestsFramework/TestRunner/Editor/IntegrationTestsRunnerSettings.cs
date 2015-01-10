@@ -30,10 +30,10 @@ namespace UnityTest
 		public void OnEnable()
 		{
 			filterString = EditorPrefs.GetString("UnityTest.IntegrationTestsRunnerSettings.Filter");
-			showSucceededTest = EditorPrefs.GetBool("UnityTest.IntegrationTestsRunnerSettings.ShowSucceededTest");
-			showFailedTest = EditorPrefs.GetBool("UnityTest.IntegrationTestsRunnerSettings.ShowFailedTest");
-			showNotRunnedTest = EditorPrefs.GetBool("UnityTest.IntegrationTestsRunnerSettings.ShowNotRunnedTest");
-			showIgnoredTest = EditorPrefs.GetBool("UnityTest.IntegrationTestsRunnerSettings.ShowIgnoredTest");
+			showSucceededTest = EditorPrefs.GetBool("UnityTest.IntegrationTestsRunnerSettings.ShowSucceededTest", true);
+			showFailedTest = EditorPrefs.GetBool("UnityTest.IntegrationTestsRunnerSettings.ShowFailedTest", true);
+			showNotRunnedTest = EditorPrefs.GetBool("UnityTest.IntegrationTestsRunnerSettings.ShowNotRunnedTest", true);
+			showIgnoredTest = EditorPrefs.GetBool("UnityTest.IntegrationTestsRunnerSettings.ShowIgnoredTest", true);
 		}
 
 		public void OnDisable()
