@@ -328,6 +328,8 @@ namespace UnityTest
             tempList.Sort();
             return tempList.ToArray();
         }
+        
+        private Rect _optionsRect;
 
         public void OnGUI()
         {
@@ -390,6 +392,9 @@ namespace UnityTest
             
             if (GUILayout.Button (m_GUIOptionsLabel, EditorStyles.toolbarButton))
                 ShowOptionsMenu ();
+                
+            if(Event.current.type == EventType.Repaint) _optionsRect = GUILayoutUtility.GetLastRect ();
+            
             EditorGUILayout.EndHorizontal ();
         }
         
@@ -398,7 +403,7 @@ namespace UnityTest
             var menu = new GenericMenu();
             menu.AddItem(m_GUIAddGoUderTest, m_Settings.addNewGameObjectUnderSelectedTest, m_Settings.ToggleAddNewGameObjectUnderSelectedTest);
             menu.AddItem(m_GUIBlockUI, m_Settings.blockUIWhenRunning, m_Settings.ToggleBlockUIWhenRunning);
-            menu.ShowAsContext();
+            menu.DropDown(_optionsRect);
         }
         
         private bool PrintTestList(IntegrationTestRendererBase[] renderedLines)
