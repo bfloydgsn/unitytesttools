@@ -7,7 +7,7 @@ using UnityEngine;
 namespace UnityTest
 {
     [Serializable]
-    public partial class UnitTestView : EditorWindow
+    public partial class UnitTestView : EditorWindow, IHasCustomMenu
     {
         private static UnitTestView s_Instance;
         private static readonly IUnitTestEngine k_TestEngine = new NUnitTestEngine();
@@ -40,12 +40,12 @@ namespace UnityTest
 
         public UnitTestView()
         {
-            title = "Unit Tests Runner";
             m_ResultList.Clear();
         }
 
         public void OnEnable()
         {
+            title = "Unit Tests";
             s_Instance = this;
             m_Settings = ProjectSettingsBase.Load<UnitTestsRunnerSettings>();
             m_FilterSettings = new TestFilterSettings("UnityTest.UnitTestView");
@@ -59,8 +59,6 @@ namespace UnityTest
             EnableBackgroundRunner(false);
         }
         
-        private Rect _optionsButtonRect;
-
         public void OnGUI()
         {
             EditorGUILayout.BeginVertical();
@@ -87,10 +85,6 @@ namespace UnityTest
             
             m_FilterSettings.OnGUI ();
 
-            if (GUILayout.Button(m_GUIOptionButton, EditorStyles.toolbarButton))
-            { DrawOptions(_optionsButtonRect);
-            }
-            if(Event.current.type == EventType.Repaint) _optionsButtonRect = GUILayoutUtility.GetLastRect();
             EditorGUILayout.EndHorizontal();
 
             if (m_Settings.horizontalSplit)
@@ -181,10 +175,9 @@ namespace UnityTest
             m_Settings.runOnRecompilation = !m_Settings.runOnRecompilation;
             EnableBackgroundRunner(m_Settings.runOnRecompilation);
         }
-
-        private void DrawOptions(Rect optionsButtonRect)
+        
+        public void AddItemsToMenu (GenericMenu menu)
         {
-            var menu = new GenericMenu();
             menu.AddItem(m_GUIRunOnRecompile, m_Settings.runOnRecompilation, ToggleRunOnRecompilation);
             menu.AddItem(m_GUIRunTestsOnNewScene, m_Settings.runTestOnANewScene, m_Settings.ToggleRunTestOnANewScene);
             if(!m_Settings.runTestOnANewScene)
@@ -192,8 +185,6 @@ namespace UnityTest
             else
                 menu.AddItem(m_GUIAutoSaveSceneBeforeRun, m_Settings.autoSaveSceneBeforeRun, m_Settings.ToggleAutoSaveSceneBeforeRun);
             menu.AddItem(m_GUIShowDetailsBelowTests, m_Settings.horizontalSplit, m_Settings.ToggleHorizontalSplit);
-            
-            menu.DropDown(optionsButtonRect);
         }
 
         private void RefreshTests()

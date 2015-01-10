@@ -8,7 +8,7 @@ using UnityTest.IntegrationTestRunner;
 namespace UnityTest
 {
     [Serializable]
-    public class IntegrationTestsRunnerWindow : EditorWindow
+    public class IntegrationTestsRunnerWindow : EditorWindow, IHasCustomMenu
     {
         #region GUI Contents
         private readonly GUIContent m_GUIOptionsLabel = new GUIContent(Icons.GearImg, "Options");
@@ -85,7 +85,7 @@ namespace UnityTest
 
         public void OnEnable()
         {
-            title = "Integration Tests Runner";
+            title = "Integration Tests";
             s_Instance = this;
 
             m_Settings = ProjectSettingsBase.Load<IntegrationTestsRunnerSettings>();
@@ -313,8 +313,6 @@ namespace UnityTest
             tempList.Sort();
             return tempList.ToArray();
         }
-        
-        private Rect _optionsRect;
 
         public void OnGUI()
         {
@@ -375,20 +373,13 @@ namespace UnityTest
             
             m_FilterSettings.OnGUI ();
             
-            if (GUILayout.Button (m_GUIOptionsLabel, EditorStyles.toolbarButton))
-                ShowOptionsMenu ();
-                
-            if(Event.current.type == EventType.Repaint) _optionsRect = GUILayoutUtility.GetLastRect ();
-            
             EditorGUILayout.EndHorizontal ();
         }
         
-        public void ShowOptionsMenu()
+        public void AddItemsToMenu(GenericMenu menu)
         {
-            var menu = new GenericMenu();
             menu.AddItem(m_GUIAddGoUderTest, m_Settings.addNewGameObjectUnderSelectedTest, m_Settings.ToggleAddNewGameObjectUnderSelectedTest);
             menu.AddItem(m_GUIBlockUI, m_Settings.blockUIWhenRunning, m_Settings.ToggleBlockUIWhenRunning);
-            menu.DropDown(_optionsRect);
         }
         
         private bool PrintTestList(IntegrationTestRendererBase[] renderedLines)

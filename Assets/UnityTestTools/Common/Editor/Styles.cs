@@ -32,7 +32,7 @@ namespace UnityTest
             info.margin.right = 15;
 
             testList = new GUIStyle("CN Box");
-            testList.margin.top = 3;
+            testList.margin.top = 0;
             testList.padding.left = 3;
 
             label = new GUIStyle(EditorStyles.label);
