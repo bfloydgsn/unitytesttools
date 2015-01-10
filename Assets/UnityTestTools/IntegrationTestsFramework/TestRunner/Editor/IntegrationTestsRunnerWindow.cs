@@ -388,6 +388,14 @@ namespace UnityTest
             
 			GUILayout.FlexibleSpace();
 
+			EditorGUI.BeginChangeCheck();
+			m_Settings.showSucceededTest = GUILayout.Toggle(m_Settings.showSucceededTest, m_GUIShowSucceededTests, EditorStyles.toolbarButton);
+			m_Settings.showFailedTest    = GUILayout.Toggle(m_Settings.showFailedTest, m_GUIShowFailedTests, EditorStyles.toolbarButton);
+			m_Settings.showIgnoredTest   = GUILayout.Toggle(m_Settings.showIgnoredTest, m_GUIShowIgnoredTests, EditorStyles.toolbarButton);
+			m_Settings.showNotRunnedTest = GUILayout.Toggle(m_Settings.showNotRunnedTest, m_GUIShowNotRunTests, EditorStyles.toolbarButton);
+			if(EditorGUI.EndChangeCheck())
+				m_Settings.Save();
+
 			if (GUILayout.Button(m_Settings.showOptions ? m_GUIOptionsHideLabel : m_GUIOptionsShowLabel, EditorStyles.toolbarButton, GUILayout.Height(24), GUILayout.Width(80)))
                 m_Settings.showOptions = !m_Settings.showOptions;
             EditorGUILayout.EndHorizontal();
@@ -398,12 +406,7 @@ namespace UnityTest
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("Filter:", GUILayout.Width(35));
             m_Settings.filterString = EditorGUILayout.TextField(m_Settings.filterString);
-            if (GUILayout.Button(m_Settings.showAdvancedFilter ? m_GUIAdvancedFilterHide : m_GUIAdvancedFilterShow, GUILayout.Width(80), GUILayout.Height(16)))
-                m_Settings.showAdvancedFilter = !m_Settings.showAdvancedFilter;
             EditorGUILayout.EndHorizontal();
-
-            if (m_Settings.showAdvancedFilter)
-                PrintAdvancedFilter();
         }
 
         public void PrintOptions()
@@ -417,18 +420,6 @@ namespace UnityTest
             if (EditorGUI.EndChangeCheck()) m_Settings.Save();
 
             EditorGUILayout.EndVertical();
-        }
-
-        private void PrintAdvancedFilter()
-        {
-            EditorGUI.BeginChangeCheck();
-            EditorGUILayout.BeginHorizontal();
-            m_Settings.showSucceededTest = GUILayout.Toggle(m_Settings.showSucceededTest, m_GUIShowSucceededTests, GUI.skin.FindStyle(GUI.skin.button.name + "left"), GUILayout.ExpandWidth(true));
-            m_Settings.showFailedTest = GUILayout.Toggle(m_Settings.showFailedTest, m_GUIShowFailedTests, GUI.skin.FindStyle(GUI.skin.button.name + "mid"));
-            m_Settings.showIgnoredTest = GUILayout.Toggle(m_Settings.showIgnoredTest, m_GUIShowIgnoredTests, GUI.skin.FindStyle(GUI.skin.button.name + "mid"));
-            m_Settings.showNotRunnedTest = GUILayout.Toggle(m_Settings.showNotRunnedTest, m_GUIShowNotRunTests, GUI.skin.FindStyle(GUI.skin.button.name + "right"), GUILayout.ExpandWidth(true));
-            EditorGUILayout.EndHorizontal();
-            if (EditorGUI.EndChangeCheck()) m_Settings.Save();
         }
 
         private bool PrintTestList(IntegrationTestRendererBase[] renderedLines)

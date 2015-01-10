@@ -9,7 +9,6 @@ namespace UnityTest
     {
         public bool showOptions;
         [NonSerialized] public string filterString;
-        public bool showAdvancedFilter;
 		[NonSerialized] public bool showSucceededTest = true;
 		[NonSerialized] public bool showFailedTest = true;
 		[NonSerialized] public bool showNotRunnedTest = true;
