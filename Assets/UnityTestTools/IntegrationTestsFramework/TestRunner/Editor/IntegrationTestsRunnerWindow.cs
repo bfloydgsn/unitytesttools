@@ -20,11 +20,12 @@ namespace UnityTest
         private readonly GUIContent m_GUIAdvancedFilterHide = new GUIContent("Hide");
         private readonly GUIContent m_GUIAddGoUderTest = new GUIContent("Add GOs under test", "Add new GameObject under selected test");
         private readonly GUIContent m_GUIBlockUI = new GUIContent("Block UI when running", "Block UI when running tests");
-        private readonly GUIContent m_GUIShowSucceededTests = new GUIContent("Succeeded", Icons.SuccessImg, "Show tests that succeeded");
-        private readonly GUIContent m_GUIShowFailedTests = new GUIContent("Failed", Icons.FailImg, "Show tests that failed");
-        private readonly GUIContent m_GUIShowIgnoredTests = new GUIContent("Ignored", Icons.IgnoreImg, "Show tests that are ignored");
-        private readonly GUIContent m_GUIShowNotRunTests = new GUIContent("Not Run", Icons.UnknownImg, "Show tests that didn't run");
-        #endregion
+        
+		private GUIContent m_GUIShowSucceededTests = new GUIContent("Succeeded", Icons.SuccessImg, "Show tests that succeeded");
+        private GUIContent m_GUIShowFailedTests = new GUIContent("Failed", Icons.FailImg, "Show tests that failed");
+        private GUIContent m_GUIShowIgnoredTests = new GUIContent("Ignored", Icons.IgnoreImg, "Show tests that are ignored");
+        private GUIContent m_GUIShowNotRunTests = new GUIContent("Not Run", Icons.UnknownImg, "Show tests that didn't run");
+		#endregion
 
         #region runner steerign vars
         private static IntegrationTestsRunnerWindow s_Instance;
@@ -251,6 +252,37 @@ namespace UnityTest
             }
         }
 
+		private void UpdateTestCounters()
+		{
+			int succeeded = 0, failed = 0, ignored = 0, notRun = 0;
+			if(m_TestLines != null)
+			{
+				foreach(var test in m_TestLines)
+				{
+					switch(test.GetResult())
+					{
+						case TestResult.ResultType.Success:
+							++succeeded;
+							break;
+						case TestResult.ResultType.Ignored:
+							++ignored;
+							break;
+						case TestResult.ResultType.NotRun:
+							++notRun;
+							break;
+						default:
+							++failed;
+							break;
+					}
+				}
+			}
+			
+			m_GUIShowSucceededTests.text	= succeeded.ToString();
+			m_GUIShowFailedTests.text		= failed.ToString();
+			m_GUIShowIgnoredTests.text		= ignored.ToString();
+			m_GUIShowNotRunTests.text		= notRun.ToString();
+		}
+
         private void RebuildTestList()
         {
             m_TestLines = null;
@@ -387,6 +419,9 @@ namespace UnityTest
 			EditorGUI.EndDisabledGroup();
             
 			GUILayout.FlexibleSpace();
+			
+			if(Event.current.type == EventType.Layout)
+				UpdateTestCounters();
 
 			EditorGUI.BeginChangeCheck();
 			m_Settings.showSucceededTest = GUILayout.Toggle(m_Settings.showSucceededTest, m_GUIShowSucceededTests, EditorStyles.toolbarButton);
