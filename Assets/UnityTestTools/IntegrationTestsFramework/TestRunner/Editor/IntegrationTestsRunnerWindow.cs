@@ -424,6 +424,12 @@ namespace UnityTest
 				UpdateTestCounters();
 
 			EditorGUI.BeginChangeCheck();
+			
+			m_Settings.filterString = GUILayout.TextField(m_Settings.filterString, "ToolbarSeachTextField", GUILayout.MinWidth(100), GUILayout.MaxWidth(300), GUILayout.ExpandWidth(true));
+			if(GUILayout.Button (GUIContent.none, string.IsNullOrEmpty(m_Settings.filterString) ? "ToolbarSeachCancelButtonEmpty" : "ToolbarSeachCancelButton"))
+				m_Settings.filterString = string.Empty;
+			GUILayout.Space(5);
+			
 			m_Settings.showSucceededTest = GUILayout.Toggle(m_Settings.showSucceededTest, m_GUIShowSucceededTests, EditorStyles.toolbarButton);
 			m_Settings.showFailedTest    = GUILayout.Toggle(m_Settings.showFailedTest, m_GUIShowFailedTests, EditorStyles.toolbarButton);
 			m_Settings.showIgnoredTest   = GUILayout.Toggle(m_Settings.showIgnoredTest, m_GUIShowIgnoredTests, EditorStyles.toolbarButton);
@@ -437,11 +443,6 @@ namespace UnityTest
 
             if (m_Settings.showOptions)
                 PrintOptions();
-
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Filter:", GUILayout.Width(35));
-            m_Settings.filterString = EditorGUILayout.TextField(m_Settings.filterString);
-            EditorGUILayout.EndHorizontal();
         }
 
         public void PrintOptions()
