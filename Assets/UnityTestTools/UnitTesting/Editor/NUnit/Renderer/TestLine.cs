@@ -15,6 +15,8 @@ namespace UnityTest
         protected static GUIContent s_GUIOpenInEditor = new GUIContent("Open in editor");
         private readonly string m_ResultId;
         private readonly IList<string> m_Categories;
+        
+        private GUIContent m_Content;
 
         public TestLine(TestMethod test, string resultId) : base(test)
         {
@@ -29,6 +31,7 @@ namespace UnityTest
                 foreach (string category in test.Parent.Parent.Categories)
                     c.Add(category);
             m_Categories = c; 
+            m_Content = new GUIContent(m_RenderedName, null, m_FullName);
         }
 
         public UnitTestResult result
@@ -53,16 +56,16 @@ namespace UnityTest
                        : Icons.UnknownImg;
             if (m_Test.RunState == RunState.Ignored)
                 icon = GuiHelper.GetIconForResult(TestResultState.Ignored);
+                
+            m_Content.image = icon;
 
-            var guiContent = new GUIContent(m_RenderedName, icon, m_FullName);
-
-            GUILayout.Space(10);
-            var rect = GUILayoutUtility.GetRect(guiContent, EditorStyles.label, GUILayout.ExpandWidth(true) /*, GUILayout.MaxHeight (18)*/);
+            var rect = GUILayoutUtility.GetRect(m_Content, Styles.testName, GUILayout.ExpandWidth(true));
 
             OnLeftMouseButtonClick(rect);
             OnContextClick(rect);
 
-            EditorGUI.LabelField(rect, guiContent, isSelected ? Styles.selectedLabel : Styles.label);
+            if(Event.current.type == EventType.repaint)
+                Styles.testName.Draw(rect, m_Content, false, false, false, isSelected);
 
             if (result.Outdated) GUI.color = tempColor;
         }
