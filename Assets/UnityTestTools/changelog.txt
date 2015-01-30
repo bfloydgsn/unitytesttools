@@ -10,7 +10,6 @@ Version 1.4.2
 (integration tests)
 - transform component is now visible for integration tests components
 - added better support for mac's keyboard
-- added object tracker and cleaner for integration tests
 - fixed 'succeed on assertion' for code generated assertion
 
 (other)
