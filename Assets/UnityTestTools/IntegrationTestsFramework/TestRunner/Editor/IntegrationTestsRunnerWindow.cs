@@ -361,21 +361,18 @@ namespace UnityTest
 
         public void PrintHeadPanel()
         {
-            GUILayout.Space(10);
-            EditorGUILayout.BeginHorizontal();
-            var layoutOptions = new[] { GUILayout.Height(24), GUILayout.Width(32) };
-            if (GUILayout.Button(m_GUIRunAllTests, Styles.buttonLeft, layoutOptions)
-                && !EditorApplication.isPlayingOrWillChangePlaymode)
+            EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
+			EditorGUI.BeginDisabledGroup(EditorApplication.isPlayingOrWillChangePlaymode);
+            var layoutOptions = new[] { GUILayout.Width(32) };
+            if (GUILayout.Button(m_GUIRunAllTests, EditorStyles.toolbarButton, layoutOptions))
             {
                 RunTests(TestComponent.FindAllTestsOnScene().Cast<ITestComponent>().ToList());
             }
-            if (GUILayout.Button(m_GUIRunSelectedTests, Styles.buttonMid, layoutOptions)
-                && !EditorApplication.isPlayingOrWillChangePlaymode)
+			if (GUILayout.Button(m_GUIRunSelectedTests, EditorStyles.toolbarButton, layoutOptions))
             {
                 RunTests(Selection.gameObjects.Select(t => t.GetComponent(typeof(TestComponent))).Cast<ITestComponent>().ToList());
             }
-            if (GUILayout.Button(m_GUICreateNewTest, Styles.buttonRight, layoutOptions)
-                && !EditorApplication.isPlayingOrWillChangePlaymode)
+			if (GUILayout.Button(m_GUICreateNewTest, EditorStyles.toolbarButton, layoutOptions))
             {
                 var test = TestComponent.CreateTest();
                 if (Selection.gameObjects.Length == 1
@@ -387,8 +384,11 @@ namespace UnityTest
                 Selection.activeGameObject = test;
                 RebuildTestList();
             }
-            GUILayout.FlexibleSpace();
-            if (GUILayout.Button(m_Settings.showOptions ? m_GUIOptionsHideLabel : m_GUIOptionsShowLabel, GUILayout.Height(24), GUILayout.Width(80)))
+			EditorGUI.EndDisabledGroup();
+            
+			GUILayout.FlexibleSpace();
+
+			if (GUILayout.Button(m_Settings.showOptions ? m_GUIOptionsHideLabel : m_GUIOptionsShowLabel, EditorStyles.toolbarButton, GUILayout.Height(24), GUILayout.Width(80)))
                 m_Settings.showOptions = !m_Settings.showOptions;
             EditorGUILayout.EndHorizontal();
 
