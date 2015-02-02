@@ -59,7 +59,7 @@ namespace UnityTest
 
         private static void OnPlaymodeStateChanged()
         {
-            if (EditorApplication.isPlaying  == EditorApplication.isPlayingOrWillChangePlaymode)
+            if (s_Instance && EditorApplication.isPlaying  == EditorApplication.isPlayingOrWillChangePlaymode)
                 s_Instance.RebuildTestList();
         }
 
@@ -75,6 +75,7 @@ namespace UnityTest
 
         private static void BackgroundSceneChangeWatch()
         {
+        	if (!s_Instance) return;
             if (s_Instance.m_CurrectSceneName != null && s_Instance.m_CurrectSceneName == EditorApplication.currentScene) return;
             if (EditorApplication.isPlayingOrWillChangePlaymode) return;
             TestComponent.DestroyAllDynamicTests();
@@ -122,7 +123,7 @@ namespace UnityTest
 
         public static void OnHierarchyChangeUpdate()
         {
-            if (s_Instance.m_TestLines == null || EditorApplication.isPlayingOrWillChangePlaymode) return;
+            if (!s_Instance || s_Instance.m_TestLines == null || EditorApplication.isPlayingOrWillChangePlaymode) return;
 
             // create a test runner if it doesn't exist
             TestRunner.GetTestRunner();
@@ -155,6 +156,7 @@ namespace UnityTest
         
         public static TestResult GetResultForTest(TestComponent tc)
         {
+        	if(!s_Instance) return new TestResult(tc);
             return s_Instance.m_ResultList.FirstOrDefault(r => r.GameObject == tc.gameObject);
         }
 
@@ -183,6 +185,7 @@ namespace UnityTest
 
         private static void SelectInHierarchy(GameObject gameObject)
         {
+        	if (!s_Instance) return;
             if (gameObject == s_Instance.m_SelectedLine) return;
             if (!gameObject.activeSelf)
             {
