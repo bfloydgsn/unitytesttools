@@ -84,6 +84,14 @@ namespace UnityTest
         {
             RunTest(new TestFilter { objects = SelectedLines.Select(line => line.m_Test.TestName).ToArray() });
         }
+        
+        public bool IsAnySelected
+        {
+            get 
+            {
+                return SelectedLines.Count > 0;
+            }
+        }
 
         public virtual string GetResultText()
         {
