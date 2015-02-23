@@ -19,5 +19,5 @@ UnityTestTools-csharp.sln.DotSettings.user
 Assets/AssetStoreTools
 Assets/AssetStoreTools.meta
 Assembly-UnityScript*
-Assets/Common/Settings
-Assets/Common/Settings.meta
+Assets/UnityTestTools/Common/Settings/*
+Assets/UnityTestTools/Common/Settings.meta
