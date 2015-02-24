@@ -25,8 +25,8 @@ namespace UnityTest
         
         public void TogglePauseOnTestFailure()
         {
-        	pauseOnTestFailure = !pauseOnTestFailure;
-        	Save ();
+            pauseOnTestFailure = !pauseOnTestFailure;
+            Save ();
         }
     }
 }

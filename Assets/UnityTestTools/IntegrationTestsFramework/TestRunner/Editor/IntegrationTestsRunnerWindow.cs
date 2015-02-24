@@ -526,8 +526,8 @@ namespace UnityTest
                     
                 if(test.IsFailure && m_Window.m_Settings.pauseOnTestFailure)
                 {
-                	EditorUtility.ClearProgressBar();
-                	EditorApplication.isPaused = true;
+                    EditorUtility.ClearProgressBar();
+                    EditorApplication.isPaused = true;
                	}
             }
 
