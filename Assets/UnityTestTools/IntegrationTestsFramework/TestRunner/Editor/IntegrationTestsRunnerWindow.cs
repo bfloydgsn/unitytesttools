@@ -528,7 +528,7 @@ namespace UnityTest
                 {
                     EditorUtility.ClearProgressBar();
                     EditorApplication.isPaused = true;
-               	}
+                }
             }
 
             public void TestRunInterrupted(List<ITestComponent> testsNotRun)
