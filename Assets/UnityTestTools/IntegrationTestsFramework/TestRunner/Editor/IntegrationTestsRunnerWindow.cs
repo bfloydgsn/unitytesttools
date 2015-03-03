@@ -16,6 +16,7 @@ namespace UnityTest
         private readonly GUIContent m_GUIRunAllTests = new GUIContent("Run All", "Run all tests");
         private readonly GUIContent m_GUIAddGoUderTest = new GUIContent("Add GOs under test", "Add new GameObject under selected test");
         private readonly GUIContent m_GUIBlockUI = new GUIContent("Block UI when running", "Block UI when running tests");
+        private readonly GUIContent m_GUIPauseOnFailure = new GUIContent("Pause on test failure");
         #endregion
 
         #region runner steerign vars
@@ -385,6 +386,7 @@ namespace UnityTest
         {
             menu.AddItem(m_GUIAddGoUderTest, m_Settings.addNewGameObjectUnderSelectedTest, m_Settings.ToggleAddNewGameObjectUnderSelectedTest);
             menu.AddItem(m_GUIBlockUI, m_Settings.blockUIWhenRunning, m_Settings.ToggleBlockUIWhenRunning);
+            menu.AddItem(m_GUIPauseOnFailure, m_Settings.pauseOnTestFailure, m_Settings.TogglePauseOnTestFailure);
         }
         
         private bool PrintTestList(IntegrationTestRendererBase[] renderedLines)
@@ -521,6 +523,12 @@ namespace UnityTest
                     result.Update(test);
                 else
                     m_Window.m_ResultList.Add(test);
+                    
+                if(test.IsFailure && m_Window.m_Settings.pauseOnTestFailure)
+                {
+                    EditorUtility.ClearProgressBar();
+                    EditorApplication.isPaused = true;
+                }
             }
 
             public void TestRunInterrupted(List<ITestComponent> testsNotRun)
@@ -531,7 +539,7 @@ namespace UnityTest
 
             private void OnEditorUpdate()
             {
-                if (m_Window.m_Settings.blockUIWhenRunning && m_CurrentTest != null
+                if (m_Window.m_Settings.blockUIWhenRunning && m_CurrentTest != null && !EditorApplication.isPaused
                     && EditorUtility.DisplayCancelableProgressBar("Integration Test Runner",
                                                                   "Running " + m_CurrentTest.Name,
                                                                   (float)m_CurrentTestNumber / m_TestNumber))
