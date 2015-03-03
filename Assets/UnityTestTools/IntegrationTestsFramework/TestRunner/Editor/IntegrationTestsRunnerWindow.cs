@@ -81,6 +81,7 @@ namespace UnityTest
             if (EditorApplication.isPlayingOrWillChangePlaymode) return;
             TestComponent.DestroyAllDynamicTests();
             s_Instance.m_CurrectSceneName = EditorApplication.currentScene;
+			s_Instance.m_ResultList.Clear();
             s_Instance.RebuildTestList();
         }
 
