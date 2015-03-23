@@ -188,7 +188,8 @@ namespace UnityTest
         private static void SelectInHierarchy(GameObject gameObject)
         {
         	if (!s_Instance) return;
-            if (gameObject == s_Instance.m_SelectedLine) return;
+			if (gameObject == s_Instance.m_SelectedLine && gameObject.activeInHierarchy) return;
+			if (EditorApplication.isPlayingOrWillChangePlaymode) return;
             if (!gameObject.activeSelf)
             {
                 selectedInHierarchy = true;
@@ -220,10 +221,8 @@ namespace UnityTest
 
             m_ReadyToRun = true;
             TestComponent.DisableAllTests();
-            EditorApplication.isPlaying = true;
 
-            if (m_Settings.blockUIWhenRunning)
-                EditorUtility.DisplayProgressBar("Integration Test Runner", "Initializing", 0);
+			EditorApplication.isPlaying = true;
         }
 
         public void Update()
@@ -540,11 +539,19 @@ namespace UnityTest
 
             private void OnEditorUpdate()
             {
-                if (m_Window.m_Settings.blockUIWhenRunning && m_CurrentTest != null && !EditorApplication.isPaused
+				if(!EditorApplication.isPlaying) 
+				{
+					TestRunInterrupted(null);
+					return;
+				}
+
+				if (m_Window.m_Settings.blockUIWhenRunning 
+				    && m_CurrentTest != null 
+				    && !EditorApplication.isPaused 
                     && EditorUtility.DisplayCancelableProgressBar("Integration Test Runner",
                                                                   "Running " + m_CurrentTest.Name,
                                                                   (float)m_CurrentTestNumber / m_TestNumber))
-                {
+				{
                     TestRunInterrupted(null);
                 }
             }
