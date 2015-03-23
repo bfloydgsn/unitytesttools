@@ -88,7 +88,8 @@ namespace UnityTest
             transfer.Transfer(ref dto.loadedLevel);
             transfer.Transfer(ref dto.loadedLevelName);
             
-            if(dto.messageType == ResultDTO.MessageType.Ping
+			if(dto.messageType == ResultDTO.MessageType.Ping
+			   || dto.messageType == ResultDTO.MessageType.TestStarted
                || dto.messageType == ResultDTO.MessageType.RunStarted
                || dto.messageType == ResultDTO.MessageType.RunFinished
                || dto.messageType == ResultDTO.MessageType.RunInterrupted)
