@@ -7,14 +7,7 @@ namespace UnityTest
 {
     public class IntegrationTestsRunnerSettings : ProjectSettingsBase
     {
-        public bool addNewGameObjectUnderSelectedTest;
         public bool blockUIWhenRunning = true;
-
-        public void ToggleAddNewGameObjectUnderSelectedTest ()
-        {
-            addNewGameObjectUnderSelectedTest = !addNewGameObjectUnderSelectedTest;
-            Save ();
-        }
         
         public void ToggleBlockUIWhenRunning ()
         {

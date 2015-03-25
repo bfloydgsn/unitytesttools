@@ -14,7 +14,6 @@ namespace UnityTest
         private readonly GUIContent m_GUICreateNewTest = new GUIContent("Create", "Create new test");
         private readonly GUIContent m_GUIRunSelectedTests = new GUIContent("Run Selected", "Run selected test(s)");
         private readonly GUIContent m_GUIRunAllTests = new GUIContent("Run All", "Run all tests");
-        private readonly GUIContent m_GUIAddGoUderTest = new GUIContent("Add GOs under test", "Add new GameObject under selected test");
         private readonly GUIContent m_GUIBlockUI = new GUIContent("Block UI when running", "Block UI when running tests");
         #endregion
 
@@ -127,19 +126,6 @@ namespace UnityTest
 
             // create a test runner if it doesn't exist
             TestRunner.GetTestRunner();
-
-            if (s_Instance.m_Settings.addNewGameObjectUnderSelectedTest
-                && s_Instance.m_SelectedLine != null
-                && Selection.activeGameObject != null)
-            {
-                var go = Selection.activeGameObject;
-                if (go.transform.parent == null
-                    && go.GetComponent<TestComponent>() == null
-                    && go.GetComponent<TestRunner>() == null)
-                {
-                    go.transform.parent = s_Instance.m_SelectedLine.transform;
-                }
-            }
 
             // make tests are not places under a go that is not a test itself
             foreach (var test in TestComponent.FindAllTestsOnScene())
@@ -383,7 +369,6 @@ namespace UnityTest
         
         public void AddItemsToMenu(GenericMenu menu)
         {
-            menu.AddItem(m_GUIAddGoUderTest, m_Settings.addNewGameObjectUnderSelectedTest, m_Settings.ToggleAddNewGameObjectUnderSelectedTest);
             menu.AddItem(m_GUIBlockUI, m_Settings.blockUIWhenRunning, m_Settings.ToggleBlockUIWhenRunning);
         }
         
