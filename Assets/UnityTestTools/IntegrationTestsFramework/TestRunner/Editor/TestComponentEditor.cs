@@ -50,6 +50,7 @@ namespace UnityTest
                 TestComponent.DestroyAllDynamicTests();
                 Selection.objects = new Object[0];
                 IntegrationTestsRunnerWindow.selectedInHierarchy = false;
+                GUIUtility.ExitGUI();
                 return;
             }
 
