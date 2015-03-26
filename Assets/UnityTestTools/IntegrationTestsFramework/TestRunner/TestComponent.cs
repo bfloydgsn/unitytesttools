@@ -297,6 +297,11 @@ namespace UnityTest
             return FindAllTestsOnScene().Any();
         }
 
+		public static bool AnyDynamicTestForCurrentScene()
+		{
+			return TestComponent.GetTypesWithHelpAttribute(EditorApplication.currentScene).Any();
+		}
+
         #endregion
 
         private sealed class NullTestComponentImpl : ITestComponent

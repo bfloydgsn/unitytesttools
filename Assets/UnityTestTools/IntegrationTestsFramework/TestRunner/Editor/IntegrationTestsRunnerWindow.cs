@@ -240,7 +240,8 @@ namespace UnityTest
         private void RebuildTestList()
         {
             m_TestLines = null;
-            if (!TestComponent.AnyTestsOnScene()) return;
+			if (!TestComponent.AnyTestsOnScene() 
+			    && !TestComponent.AnyDynamicTestForCurrentScene()) return;
 
             if (!EditorApplication.isPlayingOrWillChangePlaymode)
             {
