@@ -440,7 +440,7 @@ namespace UnityTest
 
             if (m_SelectedLine != null)
                 message = GetResultText(m_SelectedLine);
-            EditorGUILayout.TextArea(message, Styles.info);
+            EditorGUILayout.SelectableLabel(message, Styles.info);
             EditorGUILayout.EndScrollView();
         }
 
