@@ -299,7 +299,11 @@ namespace UnityTest
 
 		public static bool AnyDynamicTestForCurrentScene()
 		{
-			return TestComponent.GetTypesWithHelpAttribute(EditorApplication.currentScene).Any();
+#if UNITY_EDITOR
+                return TestComponent.GetTypesWithHelpAttribute(EditorApplication.currentScene).Any();
+#else
+                return TestComponent.GetTypesWithHelpAttribute(Application.loadedLevelName).Any();
+#endif
 		}
 
         #endregion
