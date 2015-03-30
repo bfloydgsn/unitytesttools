@@ -226,7 +226,8 @@ namespace UnityTest
         private void RebuildTestList()
         {
             m_TestLines = null;
-            if (!TestComponent.AnyTestsOnScene()) return;
+			if (!TestComponent.AnyTestsOnScene() 
+			    && !TestComponent.AnyDynamicTestForCurrentScene()) return;
 
             if (!EditorApplication.isPlayingOrWillChangePlaymode)
             {
@@ -424,7 +425,7 @@ namespace UnityTest
 
             if (m_SelectedLine != null)
                 message = GetResultText(m_SelectedLine);
-            EditorGUILayout.TextArea(message, Styles.info);
+            EditorGUILayout.SelectableLabel(message, Styles.info);
             EditorGUILayout.EndScrollView();
         }
 
