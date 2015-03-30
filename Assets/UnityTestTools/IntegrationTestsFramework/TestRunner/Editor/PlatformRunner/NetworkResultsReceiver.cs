@@ -88,6 +88,10 @@ namespace UnityTest
                         var resultWriter = new XmlResultWriter(dto.loadedLevelName, platform, m_TestResults.ToArray());
                         try
                         {
+                            if (!Directory.Exists(m_Configuration.resultsDir))
+                            {
+                                Directory.CreateDirectory(m_Configuration.resultsDir);
+                            }
                             var filePath = Path.Combine(m_Configuration.resultsDir, dto.loadedLevelName + ".xml");
                             File.WriteAllText(filePath, resultWriter.GetTestResult());
                         }
