@@ -376,7 +376,7 @@ namespace UnityTest
                 {
                     types = assembly.GetTypes();
                 }
-                catch (ReflectionTypeException ex)
+                catch (ReflectionTypeLoadException ex)
                 {
                     Debug.LogError("Failed to load types from: " + assembly.FullName);
                     foreach (Exception loadEx in ex.LoaderExceptions)
