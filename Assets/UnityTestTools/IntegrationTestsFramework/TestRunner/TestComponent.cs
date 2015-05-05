@@ -56,12 +56,16 @@ namespace UnityTest
         }
 
         public bool IsExceptionExpected(string exception)
-        {
-            if (!expectException) return false;
-            exception = exception.Trim();
+		{
+			exception = exception.Trim();
+            if (!expectException) 
+				return false;
+			if(string.IsNullOrEmpty(expectedExceptionList.Trim())) 
+				return true;
             foreach (var expectedException in expectedExceptionList.Split(',').Select(e => e.Trim()))
             {
-                if (exception == expectedException) return true;
+                if (exception == expectedException) 
+					return true;
                 var exceptionType = Type.GetType(exception) ?? GetTypeByName(exception);
                 var expectedExceptionType = Type.GetType(expectedException) ?? GetTypeByName(expectedException);
                 if (exceptionType != null && expectedExceptionType != null && IsAssignableFrom(expectedExceptionType, exceptionType))
