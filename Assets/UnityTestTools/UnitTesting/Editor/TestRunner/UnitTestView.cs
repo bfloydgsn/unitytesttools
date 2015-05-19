@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEditor.Callbacks;
 
 namespace UnityTest
 {
@@ -49,13 +50,21 @@ namespace UnityTest
             m_Settings = ProjectSettingsBase.Load<UnitTestsRunnerSettings>();
             m_FilterSettings = new TestFilterSettings("UnityTest.UnitTestView");
             RefreshTests();
-            EnableBackgroundRunner(m_Settings.runOnRecompilation);
         }
+
+		[DidReloadScripts]
+		public static void OnDidReloadScripts()
+		{
+			if (s_Instance != null && s_Instance.m_Settings.runOnRecompilation) 
+			{
+				s_Instance.RunTests();
+				s_Instance.Repaint();
+			}
+		}
 
         public void OnDestroy()
         {
             s_Instance = null;
-            EnableBackgroundRunner(false);
         }
         
         public void OnGUI()
@@ -172,7 +181,6 @@ namespace UnityTest
         private void ToggleRunOnRecompilation()
         {
             m_Settings.runOnRecompilation = !m_Settings.runOnRecompilation;
-            EnableBackgroundRunner(m_Settings.runOnRecompilation);
         }
         
         public void AddItemsToMenu (GenericMenu menu)
