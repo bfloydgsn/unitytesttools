@@ -316,7 +316,6 @@ namespace UnityTest
 
         public void OnGUI()
         {
-#if !UNITY_4_0 && !UNITY_4_0_1 && !UNITY_4_1 && !UNITY_4_2
             if (BuildPipeline.isBuildingPlayer)
             {
                 m_IsBuilding = true;
@@ -326,7 +325,7 @@ namespace UnityTest
                 m_IsBuilding = false;
                 Repaint();
             }
-#endif  // if !UNITY_4_0 && !UNITY_4_0_1 && !UNITY_4_1 && !UNITY_4_2
+
             PrintHeadPanel();
 
             EditorGUILayout.BeginVertical(Styles.testList);
