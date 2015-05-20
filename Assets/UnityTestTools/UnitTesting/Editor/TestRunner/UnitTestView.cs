@@ -173,9 +173,15 @@ namespace UnityTest
             {
                 text = m_SelectedLines.First().GetResultText();
             }
-            EditorGUILayout.SelectableLabel(text, Styles.info);
 
-            EditorGUILayout.EndScrollView();
+			var resultTextSize = Styles.info.CalcSize(new GUIContent(text));
+			EditorGUILayout.SelectableLabel(text, Styles.info,
+			                                GUILayout.ExpandHeight(true), 
+			                                GUILayout.ExpandWidth(true), 
+			                                GUILayout.MinWidth(resultTextSize.x), 
+			                                GUILayout.MinHeight(resultTextSize.y));
+			
+			EditorGUILayout.EndScrollView();
         }
         
         private void ToggleRunOnRecompilation()
