@@ -451,8 +451,11 @@ namespace UnityTest
 				return;
 			}
 			var sb = new StringBuilder(result.Name.Trim());
-			sb.Append("\n---\n"); 
-			sb.Append(result.messages.Trim());
+			if (!string.IsNullOrEmpty(result.messages))
+			{
+				sb.Append("\n---\n");
+				sb.Append(result.messages.Trim());
+			}
             if (!string.IsNullOrEmpty(result.stacktrace))
 			{
 				sb.Append("\n---\n");
