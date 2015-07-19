@@ -23,14 +23,15 @@ namespace UnityTest
             loadedLevelName = Application.loadedLevelName;
         }
 
-        public enum MessageType : byte
+		public enum MessageType : byte
         {
             Ping,
             RunStarted,
             RunFinished,
             TestStarted,
             TestFinished,
-            RunInterrupted
+            RunInterrupted,
+			AllScenesFinished
         }
 
         public static ResultDTO CreatePing()
@@ -66,6 +67,12 @@ namespace UnityTest
             dto.testResult = GetSerializableTestResult(test);
             return dto;
         }
+
+		public static ResultDTO CreateAllScenesFinished()
+		{
+			var dto = new ResultDTO(MessageType.AllScenesFinished);
+			return dto;
+		}
 
         private static ITestResult GetSerializableTestResult(TestResult test)
         {

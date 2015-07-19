@@ -522,6 +522,11 @@ namespace UnityTest
                 PlayerSettings.runInBackground = m_RunInBackground;
             }
 
+			public void AllScenesFinished()
+			{
+
+			}
+
             public void TestStarted(TestResult test)
             {
                 m_Window.SetCurrentTest(test.TestComponent);

@@ -91,7 +91,8 @@ namespace UnityTest
 			if(dto.messageType == ResultDTO.MessageType.Ping
                || dto.messageType == ResultDTO.MessageType.RunStarted
                || dto.messageType == ResultDTO.MessageType.RunFinished
-               || dto.messageType == ResultDTO.MessageType.RunInterrupted)
+               || dto.messageType == ResultDTO.MessageType.RunInterrupted
+			   || dto.messageType == ResultDTO.MessageType.AllScenesFinished)
                 return;
                 
             transfer.Transfer(ref dto.testName);

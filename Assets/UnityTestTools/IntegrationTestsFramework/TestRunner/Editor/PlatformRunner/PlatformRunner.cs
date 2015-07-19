@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
+using System.Linq;
 
 namespace UnityTest.IntegrationTests
 {
@@ -73,11 +74,13 @@ namespace UnityTest.IntegrationTests
                 settings.AddConfigurationFile(TestRunnerConfigurator.integrationTestsNetwork,
                                               string.Join("\n", configuration.GetConnectionIPs()));
 
+			settings.AddConfigurationFile (TestRunnerConfigurator.testScenesToRun, string.Join ("\n", configuration.testScenes.ToArray()));
+
             settings.ChangeSettingsForIntegrationTests();
 
             AssetDatabase.Refresh();
 
-            var result = BuildPipeline.BuildPlayer(configuration.scenes,
+            var result = BuildPipeline.BuildPlayer(configuration.testScenes.Concat(configuration.buildScenes).ToArray(),
                                                    configuration.GetTempPath(),
                                                    configuration.buildTarget,
                                                    BuildOptions.AutoRunPlayer | BuildOptions.Development);

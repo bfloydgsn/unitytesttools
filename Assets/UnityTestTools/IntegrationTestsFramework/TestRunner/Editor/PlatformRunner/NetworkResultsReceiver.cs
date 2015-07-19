@@ -100,13 +100,12 @@ namespace UnityTest
                             Debug.LogException(e);
                         }
                     }
-                    if (dto.levelCount - dto.loadedLevel == 1)
-                    {
-                        m_Running = false;
-                        m_RunFinished = true;
-                    }
                     break;
-                case ResultDTO.MessageType.Ping:
+			case ResultDTO.MessageType.AllScenesFinished:
+				m_Running = false;
+				m_RunFinished = true;
+				break;
+			case ResultDTO.MessageType.Ping:
                     break;
             }
         }

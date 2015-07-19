@@ -24,6 +24,7 @@ namespace UnityTest
     {
         public static string integrationTestsNetwork = "networkconfig.txt";
         public static string batchRunFileMarker = "batchrun.txt";
+		public static string testScenesToRun = "testscenes.txt";
 
         public bool isBatchRun { get; private set; }
 
@@ -38,6 +39,26 @@ namespace UnityTest
             CheckForBatchMode();
             CheckForSendingResultsOverNetwork();
         }
+
+		public string GetIntegrationTestScenes(int testSceneNum)
+		{
+			string text;
+			if (Application.isEditor)
+				text = GetTextFromTempFile(testScenesToRun);
+			else
+				text = GetTextFromTextAsset(testScenesToRun);
+
+			List<string> sceneList = new List<string>();
+			foreach (var line in text.Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries))
+			{
+				sceneList.Add(line.ToString());
+			}
+
+			if (testSceneNum < sceneList.Count)
+				return sceneList.ElementAt(testSceneNum);
+			else
+				return null;
+		}
 
         private void CheckForSendingResultsOverNetwork()
         {

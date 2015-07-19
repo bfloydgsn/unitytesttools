@@ -118,6 +118,10 @@ namespace UnityTest
                 EditorApplication.Exit(returnCodeRunError);
                 throw exception;
             }
+
+			public void AllScenesFinished()
+			{
+			}
         }
     }
 }
