@@ -13,13 +13,13 @@ namespace UnityTest.IntegrationTests
     {
         private BuildTarget m_BuildTarget;
 
-		private static List<string> m_IntegrationTestScenes;
-		private static List<string> m_OtherScenesToBuild;       
+		private List<string> m_IntegrationTestScenes;
+		private List<string> m_OtherScenesToBuild;       
 		private List<string> m_AllScenesInProject;
 
         private Vector2 m_ScrollPosition;
         private readonly List<string> m_Interfaces = new List<string>();
-        private readonly List<string> m_SelectedScenes = new List<string>();
+		private readonly List<string> m_SelectedScenes = new List<string>();
 
         private int m_SelectedInterface;
         [SerializeField]
@@ -54,14 +54,17 @@ namespace UnityTest.IntegrationTests
             m_Interfaces.AddRange(TestRunnerConfigurator.GetAvailableNetworkIPs());
             m_Interfaces.Add("127.0.0.1");
 
-			// If not configured pre populate with all scenes that have test components on game objects
-			if (m_IntegrationTestScenes.Count == 0)
-				m_IntegrationTestScenes = GetScenesWithTestComponents (m_AllScenesInProject);
+			LoadFromPrefereneces ();
         }
 
         public void OnEnable()
         {
             m_Settings = ProjectSettingsBase.Load<PlatformRunnerSettings>();
+
+			// If not configured pre populate with all scenes that have test components on game objects
+			// This needs to be done outsie of constructor
+			if (m_IntegrationTestScenes.Count == 0)
+				m_IntegrationTestScenes = GetScenesWithTestComponents (m_AllScenesInProject);
         }
 
         public void OnGUI()
@@ -256,6 +259,8 @@ namespace UnityTest.IntegrationTests
 
 		private void BuildAndRun()
 		{
+			SaveToPreferences ();
+
 			var config = new PlatformRunnerConfiguration
 			{
 				buildTarget = m_BuildTarget,
@@ -272,8 +277,41 @@ namespace UnityTest.IntegrationTests
 			config.ipList = new List<string> {m_Interfaces.ElementAt(m_SelectedInterface)};
 			
 			PlatformRunner.BuildAndRunInPlayer(config);
-
 			Close ();
+		}
+
+		public void OnLostFocus() {
+			SaveToPreferences ();
+		}
+
+		public void OnDestroy() {
+			SaveToPreferences ();
+		}
+
+		private void SaveToPreferences()
+		{
+			EditorPrefs.SetString (Animator.StringToHash (Application.dataPath + "uttTestScenes").ToString (), String.Join (",",m_IntegrationTestScenes.ToArray()));
+			EditorPrefs.SetString (Animator.StringToHash (Application.dataPath + "uttBuildScenes").ToString (), String.Join (",",m_OtherScenesToBuild.ToArray()));
+		}
+		
+		private void LoadFromPrefereneces()
+		{
+			string storedTestScenes = EditorPrefs.GetString (Animator.StringToHash (Application.dataPath + "uttTestScenes").ToString ());
+			string storedBuildScenes = EditorPrefs.GetString (Animator.StringToHash (Application.dataPath + "uttBuildScenes").ToString ());
+			
+			List<string> parsedTestScenes = storedTestScenes.Split (',').ToList ();
+			List<string> parsedBuildScenes = storedBuildScenes.Split (',').ToList ();
+			
+			// Sanity check scenes actually exist
+			foreach (string str in parsedTestScenes) {
+				if (m_AllScenesInProject.Contains(str))
+					m_IntegrationTestScenes.Add(str);
+			}
+			
+			foreach (string str in parsedBuildScenes) {
+				if (m_AllScenesInProject.Contains(str))
+					m_OtherScenesToBuild.Add(str);
+			}
 		}
     }
 }
