@@ -122,9 +122,9 @@ namespace UnityTest
             {
             }
 
-			public void AllScenesFinished()
-			{
-			}
+            public void AllScenesFinished()
+            {
+            }
 
             public void RunFinished()
             {

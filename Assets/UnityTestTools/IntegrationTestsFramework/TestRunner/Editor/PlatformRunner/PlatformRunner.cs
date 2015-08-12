@@ -62,8 +62,8 @@ namespace UnityTest.IntegrationTests
                 catch (SocketException e)
                 {
                     Debug.LogException(e);
-					if (InternalEditorUtility.inBatchMode)
-                    	EditorApplication.Exit(Batch.returnCodeRunError);
+                    if (InternalEditorUtility.inBatchMode)
+                        EditorApplication.Exit(Batch.returnCodeRunError);
                 }
             }
 
@@ -74,7 +74,7 @@ namespace UnityTest.IntegrationTests
                 settings.AddConfigurationFile(TestRunnerConfigurator.integrationTestsNetwork,
                                               string.Join("\n", configuration.GetConnectionIPs()));
 
-			settings.AddConfigurationFile (TestRunnerConfigurator.testScenesToRun, string.Join ("\n", configuration.testScenes.ToArray()));
+            settings.AddConfigurationFile (TestRunnerConfigurator.testScenesToRun, string.Join ("\n", configuration.testScenes.ToArray()));
 
             settings.ChangeSettingsForIntegrationTests();
 
@@ -99,7 +99,7 @@ namespace UnityTest.IntegrationTests
 
             if (configuration.sendResultsOverNetwork)
                 NetworkResultsReceiver.StartReceiver(configuration);
-			else if (InternalEditorUtility.inBatchMode)
+            else if (InternalEditorUtility.inBatchMode)
                 EditorApplication.Exit(Batch.returnCodeTestsOk);
         }
 

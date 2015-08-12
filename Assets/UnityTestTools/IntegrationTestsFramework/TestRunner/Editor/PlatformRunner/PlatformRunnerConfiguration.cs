@@ -11,7 +11,7 @@ using UnityEngine;
 public class PlatformRunnerConfiguration
 {
     public List<string> buildScenes;
-	public List<string> testScenes;
+    public List<string> testScenes;
     public BuildTarget buildTarget;
     public bool runInEditor;
     public string projectName = EditorApplication.currentScene;

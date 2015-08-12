@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Runtime.Serialization.Formatters.Binary;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -14,7 +13,7 @@ namespace UnityTest
     [Serializable]
     public class NetworkResultsReceiver : EditorWindow
     {
-        public static NetworkResultsReceiver Instance = null;
+        public static NetworkResultsReceiver Instance;
 
         private string m_StatusLabel;
         private TcpListener m_Listener;
@@ -101,11 +100,11 @@ namespace UnityTest
                         }
                     }
                     break;
-			case ResultDTO.MessageType.AllScenesFinished:
-				m_Running = false;
-				m_RunFinished = true;
-				break;
-			case ResultDTO.MessageType.Ping:
+            case ResultDTO.MessageType.AllScenesFinished:
+                m_Running = false;
+                m_RunFinished = true;
+                break;
+            case ResultDTO.MessageType.Ping:
                     break;
             }
         }
@@ -180,9 +179,9 @@ namespace UnityTest
             minSize = new Vector2(300, 100);
 
             //Unity 5.0.0 quirk throws an exception on setting the postion when in batch mode
-            if( !UnityEditorInternal.InternalEditorUtility.inBatchMode ) 
+            if( !InternalEditorUtility.inBatchMode ) 
                 position = new Rect(position.xMin, position.yMin, 300, 100);
-			titleContent = new GUIContent("Test run monitor");
+            titleContent = new GUIContent("Test run monitor");
             Instance = this;
             m_StatusLabel = "Initializing...";
             if (EditorApplication.isCompiling) return;
@@ -191,7 +190,7 @@ namespace UnityTest
 
         private void EnableServer()
         {
-			if (m_Configuration == null) throw new Exception("No result receiver server configuration.");
+            if (m_Configuration == null) throw new Exception("No result receiver server configuration.");
 
             var ipAddress = IPAddress.Any;
             if (m_Configuration.ipList != null && m_Configuration.ipList.Count == 1)
@@ -199,7 +198,7 @@ namespace UnityTest
 
             var ipAddStr = Equals(ipAddress, IPAddress.Any) ? "[All interfaces]" : ipAddress.ToString();
             
-			m_Listener = new TcpListener(ipAddress, m_Configuration.port);
+            m_Listener = new TcpListener(ipAddress, m_Configuration.port);
             m_StatusLabel = "Waiting for connection on: " + ipAddStr + ":" + m_Configuration.port;
             
             try
@@ -240,10 +239,10 @@ namespace UnityTest
         {
             var w = (NetworkResultsReceiver)GetWindow(typeof(NetworkResultsReceiver), false);
             w.SetConfiguration(configuration);
-			if (!EditorApplication.isCompiling)
-			{
-				w.EnableServer();
-			}
+            if (!EditorApplication.isCompiling)
+            {
+                w.EnableServer();
+            }
             w.Show(true);
         }
 
