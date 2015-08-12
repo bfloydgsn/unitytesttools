@@ -33,7 +33,7 @@ namespace UnityTest.IntegrationTests
         private string m_SelectedSceneInBuild;
 
         readonly GUIContent m_Label = new GUIContent("Results target directory", "Directory where the results will be saved. If no value is specified, the results will be generated in project's data folder.");
-
+        
         public PlatformRunnerSettingsWindow()
         {
             if (m_OtherScenesToBuild == null)
@@ -80,31 +80,66 @@ namespace UnityTest.IntegrationTests
 
                     // Integration Tests To Run
                     EditorGUILayout.BeginVertical ();
-                        label = new GUIContent("Tests:", "All Integration Test scenes that you wish to run on the platform");
-                        EditorGUILayout.LabelField(label, EditorStyles.boldLabel, GUILayout.Height(30f));
-                        DrawVerticalSceneList (ref m_IntegrationTestScenes, ref m_SelectedSceneInTest, Color.green);
+
+                    label = new GUIContent("Tests:", "All Integration Test scenes that you wish to run on the platform");
+                    EditorGUILayout.LabelField(label, EditorStyles.boldLabel, GUILayout.Height(20f));
+
+                    EditorGUI.BeginDisabledGroup(string.IsNullOrEmpty(m_SelectedSceneInTest));
+                        if (GUILayout.Button("Remove Integration Test")) {
+                        m_IntegrationTestScenes.Remove(m_SelectedSceneInTest);
+                        m_SelectedSceneInTest = "";
+                    }
+                    EditorGUI.EndDisabledGroup();
+
+                    DrawVerticalSceneList (ref m_IntegrationTestScenes, ref m_SelectedSceneInTest);
                     EditorGUILayout.EndVertical ();
         
                     // Extra scenes to include in build
                     EditorGUILayout.BeginVertical ();
                         label = new GUIContent("Other Scenes in Build:", "If your Integration Tests additivly load any other scenes then you want to include them here so they are part of the build");
-                        EditorGUILayout.LabelField(label, EditorStyles.boldLabel, GUILayout.Height(30f));
-                        DrawVerticalSceneList (ref m_OtherScenesToBuild, ref m_SelectedSceneInBuild, Color.white);
+                        EditorGUILayout.LabelField(label, EditorStyles.boldLabel, GUILayout.Height(20f));
+
+            
+                    EditorGUI.BeginDisabledGroup(string.IsNullOrEmpty(m_SelectedSceneInBuild));
+                    if (GUILayout.Button("Remove From Build")) {
+                        m_OtherScenesToBuild.Remove(m_SelectedSceneInBuild);
+                        m_SelectedSceneInBuild = "";
+                    }
+                    EditorGUI.EndDisabledGroup();
+
+                    DrawVerticalSceneList (ref m_OtherScenesToBuild, ref m_SelectedSceneInBuild);
                     EditorGUILayout.EndVertical ();
 
                     EditorGUILayout.Separator ();
 
                     // All Scenes
                     EditorGUILayout.BeginVertical ();
-                        label = new GUIContent("Availble Scenes", "These are all the scenes within your project, please select some to run tests");
-                        EditorGUILayout.LabelField(label, EditorStyles.boldLabel, GUILayout.Height(30f));
-                        DrawVerticalSceneList (ref m_AllScenesInProject, ref m_SelectedSceneInAll, Color.gray);
+                    label = new GUIContent("Availble Scenes", "These are all the scenes within your project, please select some to run tests");
+                    EditorGUILayout.LabelField(label, EditorStyles.boldLabel, GUILayout.Height(20f));
+
+            
+                    EditorGUILayout.BeginHorizontal ();
+                    EditorGUI.BeginDisabledGroup(string.IsNullOrEmpty(m_SelectedSceneInAll));
+                    if (GUILayout.Button("Add As Test")) {
+                        if (!m_IntegrationTestScenes.Contains (m_SelectedSceneInAll) && !m_OtherScenesToBuild.Contains (m_SelectedSceneInAll)) {
+                            m_IntegrationTestScenes.Add(m_SelectedSceneInAll);
+                        }
+                    }
+            
+                    if (GUILayout.Button("Add to Build")) {
+                        if (!m_IntegrationTestScenes.Contains (m_SelectedSceneInAll) && !m_OtherScenesToBuild.Contains (m_SelectedSceneInAll)) {
+                            m_OtherScenesToBuild.Add(m_SelectedSceneInAll);
+                        }
+                    }
+                    EditorGUI.EndDisabledGroup();
+
+                    EditorGUILayout.EndHorizontal ();
+
+                    DrawVerticalSceneList (ref m_AllScenesInProject, ref m_SelectedSceneInAll);
                     EditorGUILayout.EndVertical ();
                     
             // ButtoNetworkResultsReceiverns to edit scenes in lists
-                    EditorGUILayout.BeginVertical ();
-                        DrawSceneButtons ();
-                    EditorGUILayout.EndVertical ();
+                  
 
                 EditorGUILayout.EndHorizontal ();
                 
@@ -133,7 +168,7 @@ namespace UnityTest.IntegrationTests
             }
         }
 
-        private void DrawVerticalSceneList(ref List<string> sourceList, ref string selectString, Color idleColor)
+        private void DrawVerticalSceneList(ref List<string> sourceList, ref string selectString)
         {
             m_ScrollPosition = EditorGUILayout.BeginScrollView(m_ScrollPosition, Styles.testList);
             EditorGUI.indentLevel++;
@@ -151,7 +186,7 @@ namespace UnityTest.IntegrationTests
                     }
                 }
                 var style = new GUIStyle(EditorStyles.label);
-                style.normal.textColor = idleColor;
+ 
                 if (selectString == scenePath)
                     style.normal.textColor = new Color(0.3f, 0.5f, 0.85f);
                 EditorGUI.LabelField(rect, guiContent, style);
@@ -172,44 +207,6 @@ namespace UnityTest.IntegrationTests
             }
             
             return integrationTestScenes;
-        }
-
-        private void DrawSceneButtons()
-        {
-            // List Operation Buttons
-            /* Buttons to move scenes around */
-            EditorGUILayout.BeginVertical ();
-            GUI.enabled = !string.IsNullOrEmpty(m_SelectedSceneInAll);
-                var moveToTest = GUILayout.Button("Add As Test");
-                var moveToBuild = GUILayout.Button("Add to Build");
-            GUI.enabled = !string.IsNullOrEmpty(m_SelectedSceneInTest);
-                var removeTest = GUILayout.Button("Remove Integration Test");
-            GUI.enabled = !string.IsNullOrEmpty(m_SelectedSceneInBuild);
-                var removeBuild = GUILayout.Button("Remove From Build");
-            GUI.enabled = true;
-            EditorGUILayout.EndVertical ();
-
-            if (moveToTest) {
-                if (!m_IntegrationTestScenes.Contains (m_SelectedSceneInAll) && !m_OtherScenesToBuild.Contains (m_SelectedSceneInAll)) {
-                    m_IntegrationTestScenes.Add(m_SelectedSceneInAll);
-                }
-            }
-            
-            if (moveToBuild) {
-                if (!m_IntegrationTestScenes.Contains (m_SelectedSceneInAll) && !m_OtherScenesToBuild.Contains (m_SelectedSceneInAll)) {
-                    m_OtherScenesToBuild.Add(m_SelectedSceneInAll);
-                }
-            }
-            
-            if (removeTest) {
-                m_IntegrationTestScenes.Remove(m_SelectedSceneInTest);
-                m_SelectedSceneInTest = "";
-            }
-
-            if (removeBuild) {
-                m_OtherScenesToBuild.Remove(m_SelectedSceneInBuild);
-                m_SelectedSceneInBuild = "";
-            }
         }
 
         private void DrawSetting()
