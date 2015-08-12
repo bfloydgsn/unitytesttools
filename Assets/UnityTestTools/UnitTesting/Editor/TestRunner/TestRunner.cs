@@ -127,6 +127,10 @@ namespace UnityTest
 				m_TestCount = testCount;
             }
 
+            public void AllScenesFinished()
+            {
+            }
+
             public void RunFinished()
             {
                 EditorUtility.ClearProgressBar();
