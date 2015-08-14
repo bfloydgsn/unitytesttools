@@ -177,10 +177,6 @@ namespace UnityTest
         public void OnEnable()
         {
             minSize = new Vector2(300, 100);
-
-            //Unity 5.0.0 quirk throws an exception on setting the postion when in batch mode
-            if( !InternalEditorUtility.inBatchMode ) 
-                position = new Rect(position.xMin, position.yMin, 300, 100);
             titleContent = new GUIContent("Test run monitor");
             Instance = this;
             m_StatusLabel = "Initializing...";
@@ -254,7 +250,12 @@ namespace UnityTest
         public static void StopReceiver()
         {
             if (Instance == null) return;
-            Instance.Close();
+			try{
+            	Instance.Close();
+			}catch(Exception e){
+				Debug.LogException(e);
+				DestroyImmediate(Instance);
+			}
         }
     }
 }
