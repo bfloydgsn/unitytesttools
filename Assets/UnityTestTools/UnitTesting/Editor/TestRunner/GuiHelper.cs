@@ -98,9 +98,11 @@ namespace UnityTest
             };
 
             var assemblyDefinition = AssemblyDefinition.ReadAssembly(test.Test.AssemblyPath, readerParameters);
-            var classModule = assemblyDefinition.MainModule.Types.Single(t => t.FullName == test.Test.FullClassName);
+            var testName = test.Test.FullClassName.Replace("+", "/");
+            var types = CollectTypeDefinitions(assemblyDefinition.MainModule.Types);
+            var classModule = types.Single(t => t.FullName == testName);
 
-            Collection<MethodDefinition> methods;
+			Collection<MethodDefinition> methods;
             MethodDefinition method = null;
             while (classModule.BaseType != null)
             {
@@ -118,6 +120,17 @@ namespace UnityTest
                 return sp;
             }
             return null;
+        }
+
+        private static IEnumerable<TypeDefinition> CollectTypeDefinitions(IEnumerable<TypeDefinition> collection)
+        {
+            var typeDefs = collection.ToList();
+            foreach (var typeDefinition in collection)
+            {
+                if (typeDefinition.HasNestedTypes)
+                    typeDefs.AddRange(CollectTypeDefinitions(typeDefinition.NestedTypes));
+            }
+            return typeDefs;
         }
 
         private static void OpenInEditorInternal(string filename, int line)
